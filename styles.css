@@ -88,14 +88,6 @@ input:checked + .slider:before {
   font-size: 1.5rem;
 }
 
-.fas.fa-info-circle, .  .fas.fa-moon {
-  font-size: 1rem;
-}
-
-.fas.fa-bars {
-  font-size: 1.5rem;
-}
-
 .fas.fa-info-circle,
 .fas.fa-map-marker-alt,
 .fas.fa-calendar-alt,
