@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#16a34a" />
+  <meta name="description" content="ASCAMAREA - Associação de Catadores de Materiais Recicláveis" />
+  <title>ASCAMAREA - Associação de Catadores de Materiais Recicláveis</title>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              DEFAULT: '#16a34a',
+              dark: '#15803d'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-white">
+  <!-- Header -->
+  <header class="bg-green-600 dark:bg-green-800 text-white p-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <i class="fas fa-recycle h-8 w-8"></i>
+        <h1 class="text-2xl font-bold">ASCAMAREA</h1>
+      </div>
+      <nav class="hidden md:flex gap-6">
+        <a href="#sobre" class="hover:underline">Sobre</a>
+        <a href="#mapa" class="hover:underline">Mapa</a>
+        <a href="#calendario" class="hover:underline">Calendário</a>
+        <a href="#catadores" class="hover:underline">Área do Catador</a>
+        <a href="#comunidade" class="hover:underline">Comunidade</a>
+        <a href="#blog" class="hover:underline">Blog</a>
+      </nav>
+      <div class="flex items-center gap-4">
+        <div class="flex items-center space-x-2">
+          <i class="fas fa-sun h-4 w-4"></i>
+          <label class="switch">
+            <input type="checkbox" id="darkModeToggle">
+            <span class="slider round"></span>
+          </label>
+          <i class="fas fa-moon h-4 w-4"></i>
+        </div>
+        <button class="bg-white text-green-600 dark:bg-green-700 dark:text-white px-4 py-2 rounded-md font-medium hover:bg-opacity-90 transition">
+          Entrar
+        </button>
+      </div>
+      <button id="mobileMenuButton" class="md:hidden text-white">
+        <i class="fas fa-bars h-6 w-6"></i>
+      </button>
+    </div>
+    <div id="mobileMenu" class="md:hidden mt-4 bg-green-700 rounded-md p-4 hidden">
+      <nav class="flex flex-col gap-4">
+        <a href="#sobre" class="hover:underline">Sobre</a>
+        <a href="#mapa" class="hover:underline">Mapa</a>
+        <a href="#calendario" class="hover:underline">Calendário</a>
+        <a href="#catadores" class="hover:underline">Área do Catador</a>
+        <a href="#comunidade" class="hover:underline">Comunidade</a>
+        <a href="#blog" class="hover:underline">Blog</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="py-12 bg-gradient-to-r from-green-500 to-blue-500 text-white">
+    <div class="container mx-auto text-center px-4">
+      <h2 class="text-4xl font-bold mb-4">Transformando Resíduos em Recursos</h2>
+      <p class="text-xl mb-8 max-w-2xl mx-auto">
+        Junte-se à ASCAMAREA na missão de promover a reciclagem e apoiar os catadores de materiais recicláveis.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <button class="bg-white text-green-600 px-6 py-3 rounded-md font-bold hover:bg-opacity-90 transition">
+          Agendar Coleta
+        </button>
+        <button class="bg-transparent border-2 border-white px-6 py-3 rounded-md font-bold hover:bg-white/10 transition">
+          Saiba Mais
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container mx-auto py-8 px-4">
+    <div class="tabs">
+      <div class="tabs-list grid grid-cols-3 md:grid-cols-7 gap-2 mb-8">
+        <button class="tab-btn flex items-center justify-center md:justify-start gap-2 p-3 rounded-md bg-green-100 dark:bg-green-800 text-green-800 dark:text-white font-bold" data-tab="informacoes">
+          <i class="fas fa-info-circle"></i>
+          <span class="hidden md:inline">Informações</span>
+        </button>
+        <button class="tab-btn flex items-center justify-center md:justify-start gap-2 p-3 rounded-md bg-gray-100 dark:bg-gray-800" data-tab="mapa">
+          <i class="fas fa-map-marker-alt"></i>
+          <span class="hidden md:inline">Mapa</span>
+        </button>
+        <button class="tab-btn flex items-center justify-center md:justify-start gap-2 p-3 rounded-md bg-gray-100 dark:bg-gray-800" data-tab="calendario">
+          <i class="fas fa-calendar-alt"></i>
+          <span class="hidden md:inline">Calendário</span>
+        </button>
+        <button class="tab-btn flex items-center justify-center md:justify-start gap-2 p-3 rounded-md bg-gray-100 dark:bg-gray-800" data-tab="catadores">
+          <i class="fas fa-users"></i>
+          <span class="hidden md:inline">Catadores</span>
+        </button>
+        <button class="tab-btn flex items-center justify-center md:justify-start gap-2 p-3 rounded-md bg-gray-100 dark:bg-gray-800" data-tab="comunidade">
+          <i class="fas fa-comment"></i>
+          <span class="hidden md:inline">Comunidade</span>
+        </button>
+        <button class="tab-btn flex items-center justify-center md:justify-start gap-2 p-3 rounded-md bg-gray-100 dark:bg-gray-800" data-tab="gamificacao">
+          <i class="fas fa-trophy"></i>
+          <span class="hidden md:inline">Gamificação</span>
+        </button>
+        <button class="tab-btn flex items-center justify-center md:justify-start gap-2 p-3 rounded-md bg-gray-100 dark:bg-gray-800" data-tab="precos">
+          <i class="fas fa-tag"></i>
+          <span class="hidden md:inline">Preços</span>
+        </button>
+      </div>
+
+      <!-- Informações Tab -->
+      <div class="tab-content" id="informacoes-tab">
+        <div class="grid md:grid-cols-2 gap-8">
+          <div>
+            <h2 class="text-3xl font-bold mb-4">Sobre a ASCAMAREA</h2>
+            <p class="mb-4">
+              A ASCAMAREA é uma associação de catadores de materiais recicláveis que trabalha para promover a
+              reciclagem e melhorar as condições de trabalho dos catadores.
+            </p>
+            <p class="mb-4">
+              Nossa missão é transformar resíduos em recursos, contribuindo para um meio ambiente mais limpo e
+              sustentável, enquanto geramos renda e dignidade para os catadores.
+            </p>
+            <h3 class="text-xl font-bold mt-6 mb-2">Nossos Valores</h3>
+            <ul class="list-disc pl-5 space-y-2">
+              <li>Sustentabilidade ambiental</li>
+              <li>Inclusão social</li>
+              <li>Economia circular</li>
+              <li>Trabalho digno</li>
+              <li>Educação ambiental</li>
+            </ul>
+          </div>
+          <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-6">
+            <h3 class="text-xl font-bold mb-4">Impacto da Reciclagem</h3>
+            <div class="space-y-4">
+              <div class="flex items-center gap-4">
+                <div class="w-16 h-16 rounded-full bg-green-100 dark:bg-green-800 flex items-center justify-center">
+                  <span class="text-green-600 dark:text-green-200 text-xl font-bold">75%</span>
+                </div>
+                <div>
+                  <h4 class="font-bold">Redução de Resíduos</h4>
+                  <p>Diminuição de materiais enviados para aterros sanitários</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-4">
+                <div class="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-800 flex items-center justify-center">
+                  <span class="text-blue-600 dark:text-blue-200 text-xl font-bold">60%</span>
+                </div>
+                <div>
+                  <h4 class="font-bold">Economia de Energia</h4>
+                  <p>Comparado à produção com matérias-primas virgens</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-4">
+                <div class="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-800 flex items-center justify-center">
+                  <span class="text-amber-600 dark:text-amber-200 text-xl font-bold">100+</span>
+                </div>
+                <div>
+                  <h4 class="font-bold">Famílias Beneficiadas</h4>
+                  <p>Catadores e suas famílias com renda melhorada</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preços Tab -->
+      <div class="tab-content hidden" id="precos-tab">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+          <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-2xl font-bold">Valores dos Materiais Recicláveis</h3>
+            <p class="text-gray-600 dark:text-gray-300">
+              Confira os preços atuais pagos por kg de material reciclável
+            </p>
+          </div>
+          <div class="p-6">
+            <p class="mb-6 text-gray-700 dark:text-gray-300">
+              Os valores são atualizados mensalmente e podem variar de acordo com a qualidade do material e
+              condições de mercado. Materiais limpos, secos e separados corretamente têm maior valor.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h3 class="text-lg font-bold mb-3 text-green-600 dark:text-green-400">Papel e Papelão</h3>
+                <div class="bg-gray-50 dark:bg-gray-700 rounded-md overflow-hidden">
+                  <table class="w-full">
+                    <thead class="bg-green-50 dark:bg-green-900">
+                      <tr>
+                        <th class="text-left p-3">Material</th>
+                        <th class="text-right p-3">Valor/kg</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="border-b border-gray-200 dark:border-gray-600">
+                        <td class="p-3">Papel Branco</td>
+                        <td class="text-right p-3">R$ 0,60</td>
+                      </tr>
+                      <tr class="border-b border-gray-200 dark:border-gray-600">
+                        <td class="p-3">Papelão</td>
+                        <td class="text-right p-3">R$ 0,40</td>
+                      </tr>
+                      <tr class="border-b border-gray-200 dark:border-gray-600">
+                        <td class="p-3">Jornal</td>
+                        <td class="text-right p-3">R$ 0,30</td>
+                      </tr>
+                      <tr>
+                        <td class="p-3">Revista</td>
+                        <td class="text-right p-3">R$ 0,35</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="text-lg font-bold mb-3 text-green-600 dark:text-green-400">Plásticos</h3>
+                <div class="bg-gray-50 dark:bg-gray-700 rounded-md overflow-hidden">
+                  <table class="w-full">
+                    <thead class="bg-green-50 dark:bg-green-900">
+                      <tr>
+                        <th class="text-left p-3">Material</th>
+                        <th class="text-right p-3">Valor/kg</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="border-b border-gray-200 dark:border-gray-600">
+                        <td class="p-3">PET (Garrafas)</td>
+                        <td class="text-right p-3">R$ 1,80</td>
+                      </tr>
+                      <tr class="border-b border-gray-200 dark:border-gray-600">
+                        <td class="p-3">PEAD (Frascos)</td>
+                        <td class="text-right p-3">R$ 1,50</td>
+                      </tr>
+                      <tr class="border-b border-gray-200 dark:border-gray-600">
+                        <td class="p-3">PVC</td>
+                        <td class="text-right p-3">R$ 1,20</td>
+                      </tr>
+                      <tr>
+                        <td class="p-3">Plástico Filme</td>
+                        <td class="text-right p-3">R$ 1,00</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="text-lg font-bold mb-3 text-green-600 dark:text-green-400">Metais</h3>
+                <div class="bg-gray-50 dark:bg-gray-700 rounded-md overflow-hidden">
+                  <table class="w-full">
+                    <thead class="bg-green-50 dark:bg-green-900">
+                      <tr>
+                        <th class="text-left p-3">Material</th>
+                        <th class="text-right p-3">Valor/kg</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="border-b border-gray-200 dark:border-gray-600">
+                        <td class="p-3">Alumínio (Latas)</td>
+                        <td class="text-right p-3">R$ 5,50</td>
+                      </tr>
+                      <tr class="border-b border-gray-200 dark:border-gray-600">
+                        <td class="p-3">Cobre</td>
+                        <td class="text-right p-3">R$ 28,00</td>
+                      </tr>
+                      <tr class="border-b border-gray-200 dark:border-gray-600">
+                        <td class="p-3">Ferro</td>
+                        <td class="text-right p-3">R$ 0,40</td>
+                      </tr>
+                      <tr>
+                        <td class="p-3">Aço Inox</td>
+                        <td class="text-right p-3">R$ 3,80</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div>
+                <h3 class="text-lg font-bold mb-3 text-green-600 dark:text-green-400">Vidros e Outros</h3>
+                <div class="bg-gray-50 dark:bg-gray-700 rounded-md overflow-hidden">
+                  <table class="w-full">
+                    <thead class="bg-green-50 dark:bg-green-900">
+                      <tr>
+                        <th class="text-left p-3">Material</th>
+                        <th class="text-right p-3">Valor/kg</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="border-b border-gray-200 dark:border-gray-600">
+                        <td class="p-3">Vidro Incolor</td>
+                        <td class="text-right p-3">R$ 0,20</td>
+                      </tr>
+                      <tr class="border-b border-gray-200 dark:border-gray-600">
+                        <td class="p-3">Vidro Colorido</td>
+                        <td class="text-right p-3">R$ 0,15</td>
+                      </tr>
+                      <tr class="border-b border-gray-200 dark:border-gray-600">
+                        <td class="p-3">Óleo de Cozinha</td>
+                        <td class="text-right p-3">R$ 1,00</td>
+                      </tr>
+                      <tr>
+                        <td class="p-3">Eletrônicos</td>
+                        <td class="text-right p-3">Variável</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg mt-6">
+              <h3 class="font-bold mb-2">Informações Importantes</h3>
+              <ul class="list-disc pl-5 space-y-1">
+                <li>Os preços são referentes a materiais limpos e separados corretamente.</li>
+                <li>Materiais contaminados podem ter valor reduzido ou serem recusados.</li>
+                <li>Para grandes volumes, entre em contato para negociar valores diferenciados.</li>
+                <li>Última atualização: 01/06/2023</li>
+              </ul>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-4 mt-6">
+              <button class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md transition flex-1">
+                Solicitar Coleta
+              </button>
+              <button class="border border-green-600 text-green-600 dark:border-green-400 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 py-2 px-4 rounded-md transition flex-1">
+                Baixar Tabela Completa (PDF)
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gamificação Tab -->
+      <div class="tab-content hidden" id="gamificacao-tab">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <h3 class="text-2xl font-bold mb-4">Jogo de Reciclagem</h3>
+          <p class="mb-4">Arraste os itens para a lixeira correta e ganhe pontos!</p>
+          
+          <div id="recycling-game" class="relative bg-slate-100 dark:bg-slate-800 h-[400px] rounded-lg overflow-hidden mb-4">
+            <div class="absolute bottom-0 w-full flex justify-around pb-4">
+              <div class="bin-container" data-bin-type="paper">
+                <div class="w-20 h-24 bg-blue-500 rounded-md flex items-center justify-center">
+                  <span class="text-white font-bold">Papel</span>
+                </div>
+              </div>
+              <div class="bin-container" data-bin-type="plastic">
+                <div class="w-20 h-24 bg-red-500 rounded-md flex items-center justify-center">
+                  <span class="text-white font-bold">Plástico</span>
+                </div>
+              </div>
+              <div class="bin-container" data-bin-type="glass">
+                <div class="w-20 h-24 bg-green-500 rounded-md flex items-center justify-center">
+                  <span class="text-white font-bold">Vidro</span>
+                </div>
+              </div>
+              <div class="bin-container" data-bin-type="metal">
+                <div class="w-20 h-24 bg-yellow-500 rounded-md flex items-center justify-center">
+                  <span class="text-white font-bold">Metal</span>
+                </div>
+              </div>
+            </div>
+            
+            <div id="recycling-items" class="absolute top-4 left-0 right-0 flex flex-wrap justify-center gap-4">
+              <!-- Items will be added here by JavaScript -->
+            </div>
+            
+            <div class="absolute top-4 right-4 bg-white dark:bg-gray-700 px-3 py-1 rounded-full">
+              <span class="font-bold">Pontos: </span> 
+              <span id="game-score">0</span>
+            </div>
+          </div>
+          
+          <div class="flex justify-between">
+            <button id="game-reset" class="bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 px-4 py-2 rounded-md">
+              Reiniciar Jogo
+            </button>
+            <button id="game-start" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md">
+              Iniciar Jogo
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Placeholder para outras abas -->
+      <div class="tab-content hidden" id="mapa-tab">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center">
+          <h3 class="text-2xl font-bold mb-4">Conteúdo da aba Mapa</h3>
+          <p>Esta aba está em desenvolvimento. Por favor, verifique novamente mais tarde.</p>
+        </div>
+      </div>
+      
+      <div class="tab-content hidden" id="calendario-tab">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center">
+          <h3 class="text-2xl font-bold mb-4">Conteúdo da aba Calendário</h3>
+          <p>Esta aba está em desenvolvimento. Por favor, verifique novamente mais tarde.</p>
+        </div>
+      </div>
+      
+      <div class="tab-content hidden" id="catadores-tab">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center">
+          <h3 class="text-2xl font-bold mb-4">Conteúdo da aba Catadores</h3>
+          <p>Esta aba está em desenvolvimento. Por favor, verifique novamente mais tarde.</p>
+        </div>
+      </div>
+      
+      <div class="tab-content hidden" id="comunidade-tab">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center">
+          <h3 class="text-2xl font-bold mb-4">Conteúdo da aba Comunidade</h3>
+          <p>Esta aba está em desenvolvimento. Por favor, verifique novamente mais tarde.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-green-600 dark:bg-green-800 text-white py-8">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4">ASCAMAREA</h3>
+          <p class="mb-4">Transformando resíduos em recursos, gerando renda e dignidade para catadores.</p>
+          <div class="flex gap-4">
+            <a href="#" class="hover:text-white/80">Facebook</a>
+            <a href="#" class="hover:text-white/80">Instagram</a>
+            <a href="#" class="hover:text-white/80">Twitter</a>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold mb-4">Links Rápidos</h3>
+          <ul class="space-y-2">
+            <li><a href="#sobre" class="hover:text-white/80">Sobre Nós</a></li>
+            <li><a href="#mapa" class="hover:text-white/80">Mapa de Coleta</a></li>
+            <li><a href="#calendario" class="hover:text-white/80">Calendário</a></li>
+            <li><a href="#blog" class="hover:text-white/80">Blog</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold mb-4">Contato</h3>
+          <ul class="space-y-2">
+            <li>Av. Reciclagem, 123 - Centro</li>
+            <li>contato@ascamarea.org</li>
+            <li>(00) 00000-0000</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-lg font-bold mb-4">Newsletter</h3>
+          <p class="mb-2">Receba novidades e dicas de reciclagem</p>
+          <div class="flex gap-2">
+            <input type="email" placeholder="Seu e-mail" class="bg-white/10 border border-white/20 rounded-md px-3 py-2 text-white placeholder-white/70 flex-1">
+            <button class="bg-white text-green-600 px-4 py-2 rounded-md font-medium hover:bg-opacity-90 transition">
+              Assinar
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-white/20 mt-8 pt-4 text-center">
+        <p>&copy; 2023 ASCAMAREA. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
+
