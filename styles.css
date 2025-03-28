@@ -70,7 +70,6 @@ input:checked + .slider:before {
   margin-bottom: 8px;
 }
 
-/* Ensure icons have proper sizing */
 .fas {
   display: inline-block;
   text-align: center;
@@ -99,7 +98,6 @@ input:checked + .slider:before {
   font-size: 1.2rem;
 }
 
-/* Tab content visibility */
 .tab-content {
   display: block;
 }
@@ -108,7 +106,7 @@ input:checked + .slider:before {
   display: none;
 }
 
-/* Game styles */
+
 .bin-container {
   cursor: pointer;
   transition: all 0.2s;
@@ -118,8 +116,8 @@ input:checked + .slider:before {
   user-select: none;
 }
 
-/* Dark mode transition */
 body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+*/
