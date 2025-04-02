@@ -26,6 +26,33 @@ document.addEventListener("DOMContentLoaded", () => {
     mobileMenu.classList.toggle("hidden")
   })
 
+  // Navigation links smooth scrolling
+  const navLinks = document.querySelectorAll(".nav-link")
+  navLinks.forEach((link) => {
+    link.addEventListener("click", function (e) {
+      e.preventDefault()
+
+      // Get the target tab ID from the href
+      const targetId = this.getAttribute("href").substring(1)
+
+      // Find the tab button
+      const tabButton = document.getElementById(targetId)
+      if (tabButton) {
+        // Click the tab button to activate the tab
+        tabButton.click()
+
+        // Scroll to the tab section
+        const tabsSection = document.querySelector(".tabs")
+        tabsSection.scrollIntoView({ behavior: "smooth" })
+
+        // Close mobile menu if open
+        if (!mobileMenu.classList.contains("hidden")) {
+          mobileMenu.classList.add("hidden")
+        }
+      }
+    })
+  })
+
   // Tab switching
   const tabButtons = document.querySelectorAll(".tab-btn")
   const tabContents = document.querySelectorAll(".tab-content")
@@ -36,12 +63,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Update active tab button
       tabButtons.forEach((btn) => {
-        btn.classList.remove("bg-green-100", "dark:bg-green-800", "text-green-800", "dark:text-white", "font-bold")
-        btn.classList.add("bg-gray-100", "dark:bg-gray-800")
+        btn.classList.remove("active")
       })
 
-      this.classList.remove("bg-gray-100", "dark:bg-gray-800")
-      this.classList.add("bg-green-100", "dark:bg-green-800", "text-green-800", "dark:text-white", "font-bold")
+      this.classList.add("active")
 
       // Show selected tab content
       tabContents.forEach((content) => {
@@ -50,192 +75,550 @@ document.addEventListener("DOMContentLoaded", () => {
 
       document.getElementById(`${tabName}-tab`).classList.remove("hidden")
 
-      // Initialize game if gamificacao tab is selected
+      // Initialize specific tab content
       if (tabName === "gamificacao") {
-        initializeGame()
+        initializeQuizGame()
+      } else if (tabName === "calendario") {
+        generateCalendar()
+      } else if (tabName === "catadores") {
+        initializeCatadoresLogin()
       }
     })
   })
 
   // Calendar generation
-  function generateCalendarDays() {
+  function generateCalendar() {
     const calendarDays = document.getElementById("calendar-days")
-    if (!calendarDays) return
+    const currentMonthElement = document.getElementById("current-month")
 
-    calendarDays.innerHTML = ""
-    for (let i = 1; i <= 31; i++) {
-      const dayElement = document.createElement("div")
-      dayElement.className = `p-2 rounded-md ${
-        [3, 8, 13, 18, 23, 28].includes(i)
-          ? "bg-green-100 dark:bg-green-800"
-          : [5, 10, 15, 20, 25, 30].includes(i)
-            ? "bg-blue-100 dark:bg-blue-800"
-            : "bg-white dark:bg-gray-800"
-      }`
-      dayElement.textContent = i
-      calendarDays.appendChild(dayElement)
+    if (!calendarDays || !currentMonthElement) return
+
+    // Set up date handling
+    const currentDate = new Date()
+    let currentMonth = currentDate.getMonth()
+    let currentYear = currentDate.getFullYear()
+
+    // Collection events data (fictional)
+    const collectionEvents = {
+      // Format: "YYYY-MM-DD": ["event-type1", "event-type2"]
+      "2023-07-03": ["paper"],
+      "2023-07-05": ["plastic"],
+      "2023-07-07": ["glass"],
+      "2023-07-10": ["metal"],
+      "2023-07-12": ["paper", "plastic"],
+      "2023-07-14": ["electronic"],
+      "2023-07-17": ["general"],
+      "2023-07-19": ["paper"],
+      "2023-07-21": ["plastic"],
+      "2023-07-24": ["glass", "metal"],
+      "2023-07-26": ["paper"],
+      "2023-07-28": ["electronic"],
+      "2023-07-31": ["general"],
+
+      "2023-08-02": ["paper"],
+      "2023-08-04": ["plastic"],
+      "2023-08-07": ["glass"],
+      "2023-08-09": ["metal"],
+      "2023-08-11": ["paper", "plastic"],
+      "2023-08-14": ["electronic"],
+      "2023-08-16": ["general"],
+      "2023-08-18": ["paper"],
+      "2023-08-21": ["plastic"],
+      "2023-08-23": ["glass", "metal"],
+      "2023-08-25": ["paper"],
+      "2023-08-28": ["electronic"],
+      "2023-08-30": ["general"],
+    }
+
+    // Event type colors
+    const eventColors = {
+      paper: "green",
+      plastic: "red",
+      glass: "blue",
+      metal: "yellow",
+      electronic: "purple",
+      general: "gray",
+    }
+
+    function renderCalendar() {
+      // Update month display
+      const monthNames = [
+        "Janeiro",
+        "Fevereiro",
+        "Março",
+        "Abril",
+        "Maio",
+        "Junho",
+        "Julho",
+        "Agosto",
+        "Setembro",
+        "Outubro",
+        "Novembro",
+        "Dezembro",
+      ]
+      currentMonthElement.textContent = `${monthNames[currentMonth]} ${currentYear}`
+
+      // Clear previous calendar
+      calendarDays.innerHTML = ""
+
+      // Get first day of month and total days
+      const firstDay = new Date(currentYear, currentMonth, 1).getDay()
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
+
+      // Add empty cells for days before the first day of month
+      for (let i = 0; i < firstDay; i++) {
+        const emptyDay = document.createElement("div")
+        emptyDay.className = "calendar-day empty"
+        calendarDays.appendChild(emptyDay)
+      }
+
+      // Add days of the month
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayElement = document.createElement("div")
+        dayElement.className = "calendar-day"
+
+        // Add day number
+        const dayNumber = document.createElement("div")
+        dayNumber.className = "day-number"
+        dayNumber.textContent = day
+        dayElement.appendChild(dayNumber)
+
+        // Check for events on this day
+        const dateString = `${currentYear}-${(currentMonth + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`
+
+        if (collectionEvents[dateString]) {
+          const eventContainer = document.createElement("div")
+          eventContainer.className = "event-dots"
+
+          collectionEvents[dateString].forEach((eventType) => {
+            const eventDot = document.createElement("span")
+            eventDot.className = `event-dot ${eventColors[eventType]}`
+            eventDot.title = eventType.charAt(0).toUpperCase() + eventType.slice(1)
+            eventContainer.appendChild(eventDot)
+          })
+
+          dayElement.appendChild(eventContainer)
+          dayElement.classList.add("has-events")
+
+          // Add tooltip or popup functionality
+          dayElement.addEventListener("click", () => {
+            alert(`Coleta de ${collectionEvents[dateString].join(" e ")} em ${day}/${currentMonth + 1}/${currentYear}`)
+          })
+        }
+
+        calendarDays.appendChild(dayElement)
+      }
+    }
+
+    // Initialize calendar navigation
+    const prevMonthButton = document.getElementById("prev-month")
+    const nextMonthButton = document.getElementById("next-month")
+
+    if (prevMonthButton && nextMonthButton) {
+      prevMonthButton.addEventListener("click", () => {
+        currentMonth--
+        if (currentMonth < 0) {
+          currentMonth = 11
+          currentYear--
+        }
+        renderCalendar()
+      })
+
+      nextMonthButton.addEventListener("click", () => {
+        currentMonth++
+        if (currentMonth > 11) {
+          currentMonth = 0
+          currentYear++
+        }
+        renderCalendar()
+      })
+    }
+
+    // Initial render
+    renderCalendar()
+  }
+
+  // Catadores Login
+  function initializeCatadoresLogin() {
+    const loginForm = document.getElementById("catador-login-form")
+    const loginMessage = document.getElementById("login-message")
+    const catadorArea = document.getElementById("catador-area")
+    const logoutButton = document.getElementById("logout-button")
+
+    if (!loginForm || !loginMessage || !catadorArea || !logoutButton) return
+
+    // Check if already logged in
+    if (localStorage.getItem("catadorLoggedIn") === "true") {
+      showLoggedInArea()
+    }
+
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault()
+
+      const username = document.getElementById("username").value
+      const password = document.getElementById("password").value
+
+      // Simple validation
+      if (!username || !password) {
+        showMessage("Por favor, preencha todos os campos.", "error")
+        return
+      }
+
+      // Mock login - in a real app, this would be a server request
+      if (username === "catador" && password === "123456") {
+        showMessage("Login realizado com sucesso!", "success")
+
+        // Save login state
+        if (document.getElementById("remember-me").checked) {
+          localStorage.setItem("catadorLoggedIn", "true")
+        }
+
+        // Show logged in area after a short delay
+        setTimeout(() => {
+          showLoggedInArea()
+        }, 1000)
+      } else {
+        showMessage("Usuário ou senha incorretos.", "error")
+      }
+    })
+
+    logoutButton.addEventListener("click", () => {
+      // Hide logged in area
+      catadorArea.classList.add("hidden")
+      loginForm.classList.remove("hidden")
+      loginMessage.classList.add("hidden")
+
+      // Clear form
+      document.getElementById("username").value = ""
+      document.getElementById("password").value = ""
+
+      // Remove login state
+      localStorage.removeItem("catadorLoggedIn")
+    })
+
+    function showMessage(message, type) {
+      loginMessage.textContent = message
+      loginMessage.classList.remove("hidden", "success", "error")
+
+      if (type === "success") {
+        loginMessage.classList.add("success")
+      } else {
+        loginMessage.classList.add("error")
+      }
+    }
+
+    function showLoggedInArea() {
+      loginForm.classList.add("hidden")
+      catadorArea.classList.remove("hidden")
+      document.getElementById("catador-name").textContent = "João Silva" // This would come from the server
     }
   }
 
-  // Recycling Game
-  function initializeGame() {
-    const gameContainer = document.getElementById("recycling-game")
-    const itemsContainer = document.getElementById("recycling-items")
-    const scoreDisplay = document.getElementById("game-score")
-    const resetButton = document.getElementById("game-reset")
+  // Quiz Game
+  function initializeQuizGame() {
+    const gameStartScreen = document.getElementById("game-start-screen")
+    const gameQuestionScreen = document.getElementById("game-question-screen")
+    const gameResultScreen = document.getElementById("game-result-screen")
     const startButton = document.getElementById("game-start")
+    const restartButton = document.getElementById("game-restart")
+    const shareButton = document.getElementById("share-results")
+    const scoreDisplay = document.getElementById("game-score")
+    const finalScoreDisplay = document.getElementById("final-score")
+    const correctAnswersDisplay = document.getElementById("correct-answers")
+    const wrongAnswersDisplay = document.getElementById("wrong-answers")
+    const timeTakenDisplay = document.getElementById("time-taken")
+    const currentQuestionDisplay = document.getElementById("current-question")
+    const totalQuestionsDisplay = document.getElementById("total-questions")
+    const questionText = document.getElementById("question-text")
+    const answersContainer = document.getElementById("answers-container")
+    const timeBar = document.getElementById("time-bar")
 
-    if (!gameContainer || !itemsContainer || !scoreDisplay || !resetButton || !startButton) return
+    if (
+      !gameStartScreen ||
+      !gameQuestionScreen ||
+      !gameResultScreen ||
+      !startButton ||
+      !restartButton ||
+      !scoreDisplay ||
+      !finalScoreDisplay ||
+      !answersContainer
+    )
+      return
 
-    let score = 0
-    let gameStarted = false
-    let currentItems = []
-
-    const recyclableItems = [
-      { type: "paper", name: "Jornal", color: "bg-blue-200" },
-      { type: "paper", name: "Caderno", color: "bg-blue-200" },
-      { type: "paper", name: "Revista", color: "bg-blue-200" },
-      { type: "plastic", name: "Garrafa PET", color: "bg-red-200" },
-      { type: "plastic", name: "Sacola", color: "bg-red-200" },
-      { type: "plastic", name: "Embalagem", color: "bg-red-200" },
-      { type: "glass", name: "Garrafa", color: "bg-green-200" },
-      { type: "glass", name: "Pote", color: "bg-green-200" },
-      { type: "glass", name: "Vidro", color: "bg-green-200" },
-      { type: "metal", name: "Lata", color: "bg-yellow-200" },
-      { type: "metal", name: "Tampa", color: "bg-yellow-200" },
-      { type: "metal", name: "Alumínio", color: "bg-yellow-200" },
+    // Quiz questions
+    const questions = [
+      {
+        question: "Qual destes materiais NÃO é reciclável?",
+        answers: [
+          { text: "Papel toalha usado", correct: true },
+          { text: "Latas de alumínio", correct: false },
+          { text: "Garrafas de vidro", correct: false },
+          { text: "Embalagens de plástico", correct: false },
+        ],
+      },
+      {
+        question: "Qual a cor da lixeira para descarte de papel?",
+        answers: [
+          { text: "Verde", correct: false },
+          { text: "Vermelho", correct: false },
+          { text: "Azul", correct: true },
+          { text: "Amarelo", correct: false },
+        ],
+      },
+      {
+        question: "Quanto tempo leva para uma garrafa PET se decompor na natureza?",
+        answers: [
+          { text: "Cerca de 5 anos", correct: false },
+          { text: "Cerca de 100 anos", correct: false },
+          { text: "Cerca de 400 anos", correct: true },
+          { text: "Cerca de 1000 anos", correct: false },
+        ],
+      },
+      {
+        question: "O que significa a sigla 'PET' nas garrafas plásticas?",
+        answers: [
+          { text: "Polietileno Tereftalato", correct: true },
+          { text: "Plástico Especial Tratado", correct: false },
+          { text: "Polímero Ecológico Térmico", correct: false },
+          { text: "Produto Específico Transparente", correct: false },
+        ],
+      },
+      {
+        question: "Qual destes NÃO é um benefício da reciclagem?",
+        answers: [
+          { text: "Redução do consumo de energia", correct: false },
+          { text: "Diminuição da poluição do ar", correct: false },
+          { text: "Aumento da extração de recursos naturais", correct: true },
+          { text: "Geração de empregos", correct: false },
+        ],
+      },
+      {
+        question: "O que deve ser feito com pilhas e baterias usadas?",
+        answers: [
+          { text: "Jogar no lixo comum", correct: false },
+          { text: "Enterrar no jardim", correct: false },
+          { text: "Queimar", correct: false },
+          { text: "Levar a pontos de coleta específicos", correct: true },
+        ],
+      },
+      {
+        question: "Qual é o processo de transformação de resíduos orgânicos em adubo?",
+        answers: [
+          { text: "Reciclagem", correct: false },
+          { text: "Compostagem", correct: true },
+          { text: "Incineração", correct: false },
+          { text: "Destilação", correct: false },
+        ],
+      },
+      {
+        question: "Qual destes materiais demora mais tempo para se decompor?",
+        answers: [
+          { text: "Chiclete", correct: false },
+          { text: "Isopor", correct: false },
+          { text: "Vidro", correct: true },
+          { text: "Plástico", correct: false },
+        ],
+      },
+      {
+        question: "O que é coleta seletiva?",
+        answers: [
+          { text: "Separação e recolhimento de resíduos para reciclagem", correct: true },
+          { text: "Coleta de lixo apenas em dias específicos", correct: false },
+          { text: "Seleção de materiais para incineração", correct: false },
+          { text: "Recolhimento apenas de materiais orgânicos", correct: false },
+        ],
+      },
+      {
+        question: "Qual a principal vantagem da economia circular?",
+        answers: [
+          { text: "Aumentar o consumo de produtos", correct: false },
+          { text: "Reduzir custos apenas para empresas", correct: false },
+          { text: "Minimizar desperdícios e prolongar o ciclo de vida dos materiais", correct: true },
+          { text: "Facilitar o descarte de produtos", correct: false },
+        ],
+      },
     ]
 
-    function createItem(item) {
-      const itemId = `item-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`
-      const itemElement = document.createElement("div")
-      itemElement.id = itemId
-      itemElement.className = `item p-3 rounded ${item.color} cursor-move shadow-md`
-      itemElement.setAttribute("data-type", item.type)
-      itemElement.setAttribute("draggable", "true")
-      itemElement.textContent = item.name
+    let currentQuestionIndex = 0
+    let score = 0
+    let correctAnswers = 0
+    let wrongAnswers = 0
+    let timeLeft = 0
+    let timer
+    let gameStartTime
 
-      // Add drag event listeners
-      itemElement.addEventListener("dragstart", function (e) {
-        e.dataTransfer.setData("text/plain", item.type)
-        e.dataTransfer.setData("item-id", itemId)
-        setTimeout(() => {
-          this.classList.add("opacity-50")
-        }, 0)
-      })
-
-      itemElement.addEventListener("dragend", function () {
-        this.classList.remove("opacity-50")
-      })
-
-      return itemElement
-    }
-
-    function setupBins() {
-      const bins = document.querySelectorAll(".bin-container")
-
-      bins.forEach((bin) => {
-        bin.addEventListener("dragover", function (e) {
-          e.preventDefault()
-          this.classList.add("ring-2", "ring-white")
-        })
-
-        bin.addEventListener("dragleave", function () {
-          this.classList.remove("ring-2", "ring-white")
-        })
-
-        bin.addEventListener("drop", function (e) {
-          e.preventDefault()
-          this.classList.remove("ring-2", "ring-white")
-
-          const itemType = e.dataTransfer.getData("text/plain")
-          const binType = this.getAttribute("data-bin-type")
-
-          if (itemType === binType) {
-            score += 10
-            scoreDisplay.textContent = score
-
-            // Find and remove the dragged item
-            const itemId = e.dataTransfer.getData("item-id")
-            const draggedItem = document.getElementById(itemId)
-            if (draggedItem) {
-              const itemName = draggedItem.textContent
-              currentItems = currentItems.filter((i) => i.id !== itemId)
-              draggedItem.remove()
-
-              // Show success message
-              showFeedback("Correto! +10 pontos", "bg-green-500")
-
-              // Check if game is complete
-              if (currentItems.length === 0) {
-                showFeedback("Jogo concluído! Parabéns!", "bg-green-600")
-                gameStarted = false
-                startButton.textContent = "Jogar Novamente"
-                startButton.disabled = false
-              }
-            }
-          } else {
-            // Show error message
-            showFeedback("Incorreto! Tente novamente.", "bg-red-500")
-          }
-        })
-      })
-    }
-
-    function showFeedback(message, bgClass) {
-      const feedback = document.createElement("div")
-      feedback.className = `absolute top-16 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded text-white ${bgClass}`
-      feedback.textContent = message
-      gameContainer.appendChild(feedback)
-
-      setTimeout(() => {
-        feedback.remove()
-      }, 2000)
-    }
+    // Initialize game
+    startButton.addEventListener("click", startGame)
+    restartButton.addEventListener("click", startGame)
+    shareButton.addEventListener("click", shareResults)
 
     function startGame() {
-      if (gameStarted) return
-
-      // Clear previous items
-      itemsContainer.innerHTML = ""
-      currentItems = []
+      // Reset game state
+      currentQuestionIndex = 0
       score = 0
-      scoreDisplay.textContent = score
-      gameStarted = true
+      correctAnswers = 0
+      wrongAnswers = 0
+      gameStartTime = Date.now()
 
-      // Get 5 random items
-      const shuffled = [...recyclableItems].sort(() => 0.5 - Math.random())
-      const selected = shuffled.slice(0, 5)
+      // Update displays
+      scoreDisplay.textContent = "0"
 
-      // Add to current items and display
-      selected.forEach((item) => {
-        const itemElement = createItem(item)
-        itemsContainer.appendChild(itemElement)
-        currentItems.push({ ...item, id: itemElement.id })
+      // Show question screen
+      gameStartScreen.classList.add("hidden")
+      gameResultScreen.classList.add("hidden")
+      gameQuestionScreen.classList.remove("hidden")
+
+      // Set total questions
+      totalQuestionsDisplay.textContent = questions.length
+
+      // Show first question
+      showQuestion(questions[currentQuestionIndex])
+    }
+
+    function showQuestion(question) {
+      // Update question number
+      currentQuestionDisplay.textContent = currentQuestionIndex + 1
+
+      // Set question text
+      questionText.textContent = question.question
+
+      // Clear previous answers
+      answersContainer.innerHTML = ""
+
+      // Add answer options
+      question.answers.forEach((answer, index) => {
+        const answerButton = document.createElement("div")
+        answerButton.className = "answer-option"
+        answerButton.innerHTML = `
+          <div class="answer-content">
+            <div class="answer-marker">
+              <span>${String.fromCharCode(65 + index)}</span>
+            </div>
+            <span>${answer.text}</span>
+          </div>
+        `
+
+        answerButton.addEventListener("click", () => {
+          selectAnswer(answer, answerButton)
+        })
+
+        answersContainer.appendChild(answerButton)
       })
 
-      startButton.disabled = true
+      // Start timer
+      startTimer()
     }
 
-    function resetGame() {
-      itemsContainer.innerHTML = ""
-      currentItems = []
-      score = 0
-      scoreDisplay.textContent = score
-      gameStarted = false
-      startButton.disabled = false
-      startButton.textContent = "Iniciar Jogo"
+    function startTimer() {
+      // Reset timer
+      clearInterval(timer)
+      timeLeft = 100
+      timeBar.style.width = "100%"
+
+      // Start countdown
+      timer = setInterval(() => {
+        timeLeft -= 1
+        timeBar.style.width = `${timeLeft}%`
+
+        if (timeLeft <= 0) {
+          clearInterval(timer)
+          // Auto-select wrong answer if time runs out
+          wrongAnswers++
+          nextQuestion()
+        }
+      }, 100) // 10 seconds total (100 * 100ms)
     }
 
-    // Set up event listeners
-    setupBins()
-    startButton.addEventListener("click", startGame)
-    resetButton.addEventListener("click", resetGame)
+    function selectAnswer(answer, selectedButton) {
+      // Stop timer
+      clearInterval(timer)
+
+      // Disable all answers
+      const allAnswers = answersContainer.querySelectorAll(".answer-option")
+      allAnswers.forEach((button) => {
+        button.style.pointerEvents = "none"
+      })
+
+      // Mark selected answer
+      selectedButton.classList.add("selected")
+
+      // Check if answer is correct
+      if (answer.correct) {
+        selectedButton.classList.add("correct")
+        // Add points
+        score += 10 + Math.floor(timeLeft / 10) // More points for faster answers
+        scoreDisplay.textContent = score
+        correctAnswers++
+      } else {
+        selectedButton.classList.add("incorrect")
+        wrongAnswers++
+
+        // Show correct answer
+        allAnswers.forEach((button) => {
+          const buttonIndex = Array.from(allAnswers).indexOf(button)
+          if (questions[currentQuestionIndex].answers[buttonIndex].correct) {
+            button.classList.add("correct")
+          }
+        })
+      }
+
+      // Go to next question after delay
+      setTimeout(() => {
+        nextQuestion()
+      }, 1500)
+    }
+
+    function nextQuestion() {
+      currentQuestionIndex++
+
+      if (currentQuestionIndex < questions.length) {
+        showQuestion(questions[currentQuestionIndex])
+      } else {
+        endGame()
+      }
+    }
+
+    function endGame() {
+      // Calculate time taken
+      const timeTaken = Math.floor((Date.now() - gameStartTime) / 1000)
+
+      // Update result screen
+      finalScoreDisplay.textContent = score
+      correctAnswersDisplay.textContent = correctAnswers
+      wrongAnswersDisplay.textContent = wrongAnswers
+      timeTakenDisplay.textContent = `${timeTaken}s`
+
+      // Show appropriate icon based on score
+      const resultIcon = document.getElementById("result-icon")
+      if (score >= 80) {
+        resultIcon.className = "fas fa-trophy text-yellow result-icon"
+      } else if (score >= 50) {
+        resultIcon.className = "fas fa-medal text-blue result-icon"
+      } else {
+        resultIcon.className = "fas fa-award text-gray result-icon"
+      }
+
+      // Show result screen
+      gameQuestionScreen.classList.add("hidden")
+      gameResultScreen.classList.remove("hidden")
+    }
+
+    function shareResults() {
+      // In a real app, this would share to social media
+      alert(
+        `Compartilhei minha pontuação no Desafio de Reciclagem: ${score} pontos! Venha testar seus conhecimentos sobre reciclagem em ascamarea.org`,
+      )
+    }
   }
 
-  // Initialize the game if the gamificacao tab is active on page load
-  if (!document.getElementById("gamificacao-tab").classList.contains("hidden")) {
-    initializeGame()
+  // Initialize the appropriate tab content based on the active tab
+  const activeTab = document.querySelector(".tab-btn.active").getAttribute("data-tab")
+  if (activeTab === "gamificacao") {
+    initializeQuizGame()
+  } else if (activeTab === "calendario") {
+    generateCalendar()
+  } else if (activeTab === "catadores") {
+    initializeCatadoresLogin()
   }
 })
 
