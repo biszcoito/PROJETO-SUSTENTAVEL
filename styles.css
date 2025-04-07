@@ -369,7 +369,9 @@ ol {
 .mobile-nav a:hover {
   text-decoration: underline;
 }
-
+.info-content{
+  margin-left: 15px;
+}
 .hero {
   padding: var(--spacing-12) 0;
   background: linear-gradient(to right, var(--color-green-500), var(--color-blue-500));
@@ -1576,7 +1578,6 @@ ol {
   font-weight: bold;
   margin-bottom: var(--spacing-4);
 }
-
 .social-links {
   display: flex;
   gap: var(--spacing-4);
@@ -1827,7 +1828,7 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-/* Animations */
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -1843,7 +1844,7 @@ input:checked + .slider:before {
   animation: fadeIn 0.3s ease-out;
 }
 
-/* Responsive styles */
+
 @media (min-width: 768px) {
   .main-nav {
     display: flex;
@@ -1902,9 +1903,8 @@ input:checked + .slider:before {
   }
 }
 
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 80px; /* Adjust based on header height */
+  scroll-padding-top: 80px;
 }
 
