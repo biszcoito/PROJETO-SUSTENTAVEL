@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#16a34a" />
+  <meta name="description" content="ASCAMAREA - Conteúdo" />
+  <title>ASCAMAREA</title>
+  <link href="./imgs/logo.png" rel="icon" type="image/png"/>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="blog.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-container">
+      <div class="logo">
+        <i class="fas fa-recycle"></i>
+        <h1>ASCAMAREA</h1>
+      </div>
+      <nav class="main-nav">
+        <a href="index.html#sobre" class="nav-link">Sobre</a>
+        <a href="index.html#mapa" class="nav-link">Mapa</a>
+        <a href="index.html#calendario" class="nav-link">Calendário</a>
+        <a href="index.html#blog" class="nav-link">Blog</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="theme-toggle">
+          <i class="fas fa-sun"></i>
+          <label class="switch">
+            <input type="checkbox" id="darkModeToggle">
+            <span class="slider round"></span>
+          </label>
+          <i class="fas fa-moon"></i>
+        </div>
+      </div>
+      <button id="mobileMenuButton" class="mobile-menu-button">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+    <div id="mobileMenu" class="mobile-menu hidden">
+      <nav class="mobile-nav">
+        <a href="index.html#sobre" class="nav-link">Sobre</a>
+        <a href="index.html#mapa" class="nav-link">Mapa</a>
+        <a href="index.html#calendario" class="nav-link">Calendário</a>
+        <a href="index.html#blog" class="nav-link">Blog</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container article-container">
+    <article class="blog-article">
+      <div id="content-header" class="article-header">
+        <!-- Título e metadados serão inseridos aqui dinamicamente -->
+      </div>
+
+      <div id="content-featured-image" class="article-featured-image">
+        <!-- Ícone será inserido aqui dinamicamente -->
+      </div>
+
+      <div id="content-body" class="article-content">
+        <!-- Conteúdo será inserido aqui dinamicamente -->
+      </div>
+
+      <div id="content-footer" class="article-footer">
+        <!-- Tags e botões de compartilhamento serão inseridos aqui dinamicamente -->
+      </div>
+
+      <div id="related-content" class="related-articles">
+        <!-- Conteúdo relacionado será inserido aqui dinamicamente -->
+      </div>
+    </article>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>ASCAMAREA</h3>
+          <p>Transformando resíduos em recursos, gerando renda e dignidade para catadores.</p>
+          <div class="social-links">
+            <a href="#" class="social-link">Facebook</a>
+            <a href="#" class="social-link">Instagram</a>
+            <a href="#" class="social-link">Twitter</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h3>Links Rápidos</h3>
+          <ul class="footer-links">
+            <li><a href="index.html#sobre" class="nav-link">Sobre Nós</a></li>
+            <li><a href="index.html#mapa" class="nav-link">Mapa de Coleta</a></li>
+            <li><a href="index.html#calendario" class="nav-link">Calendário</a></li>
+            <li><a href="index.html#blog" class="nav-link">Blog</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Contato</h3>
+          <ul class="contact-info">
+            <li>Av. Reciclagem, 123 - Centro</li>
+            <li>contato@ascamarea.org</li>
+            <li>(00) 00000-0000</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2023 ASCAMAREA. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="data/content.js"></script>
+  <script src="content-view.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

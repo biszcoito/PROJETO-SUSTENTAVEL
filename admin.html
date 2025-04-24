@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#16a34a" />
+  <meta name="description" content="ASCAMAREA - Área Administrativa" />
+  <title>Área Administrativa | ASCAMAREA</title>
+  <link href="./imgs/logo.png" rel="icon" type="image/png"/>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-container">
+      <div class="logo">
+        <i class="fas fa-recycle"></i>
+        <h1>ASCAMAREA</h1>
+      </div>
+      <div class="header-actions">
+        <a href="index.html" class="btn btn-light">Voltar ao site</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container admin-container">
+    <div id="login-section" class="admin-section">
+      <div class="card">
+        <div class="card-header">
+          <h2>Acesso Administrativo</h2>
+        </div>
+        <div class="card-body">
+          <form id="login-form" class="admin-form">
+            <div class="form-group">
+              <label for="username">Nome de Usuário:</label>
+              <input type="text" id="username" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Senha de Acesso:</label>
+              <input type="password" id="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-green btn-full">Acessar</button>
+          </form>
+          <div id="login-error" class="error-message hidden">Senha incorreta. Tente novamente.</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="admin-panel" class="admin-section hidden">
+      <div class="admin-header">
+        <h2>Painel Administrativo</h2>
+        <button id="logout-btn" class="btn btn-outline-green">Sair</button>
+      </div>
+
+      <div class="tabs">
+        <div class="tabs-list admin-tabs">
+          <button class="tab-btn active" data-tab="new-content">
+            <i class="fas fa-plus-circle"></i>
+            <span>Novo Conteúdo</span>
+          </button>
+          <button class="tab-btn" data-tab="manage-content">
+            <i class="fas fa-list"></i>
+            <span>Gerenciar Conteúdo</span>
+          </button>
+        </div>
+
+        <div class="tab-content" id="new-content-tab">
+          <div class="card">
+            <div class="card-header">
+              <h3>Criar Novo Conteúdo</h3>
+            </div>
+            <div class="card-body">
+              <div class="content-type-selector">
+                <label>Tipo de Conteúdo:</label>
+                <div class="content-type-options">
+                  <label class="content-type-option">
+                    <input type="radio" name="content-type" value="article" checked>
+                    <span class="content-type-label">
+                      <i class="fas fa-newspaper"></i>
+                      Artigo
+                    </span>
+                  </label>
+                  <label class="content-type-option">
+                    <input type="radio" name="content-type" value="announcement">
+                    <span class="content-type-label">
+                      <i class="fas fa-bullhorn"></i>
+                      Comunicado
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              <form id="content-form" class="admin-form">
+                <div class="form-group">
+                  <label for="content-title">Título:</label>
+                  <input type="text" id="content-title" class="form-control" required>
+                </div>
+                
+                <div class="form-group article-field">
+                  <label for="content-author">Autor:</label>
+                  <input type="text" id="content-author" class="form-control">
+                </div>
+                
+                <div class="form-group">
+                  <label for="content-category">Categoria:</label>
+                  <select id="content-category" class="form-control" required>
+                    <option value="">Selecione uma categoria</option>
+                    <option value="Reciclagem">Reciclagem</option>
+                    <option value="Compostagem">Compostagem</option>
+                    <option value="Sustentabilidade">Sustentabilidade</option>
+                    <option value="Meio Ambiente">Meio Ambiente</option>
+                    <option value="Educação Ambiental">Educação Ambiental</option>
+                    <option value="Coleta Seletiva">Coleta Seletiva</option>
+                    <option value="Eventos">Eventos</option>
+                    <option value="Notícias">Notícias</option>
+                  </select>
+                </div>
+                
+                <div class="form-group article-field">
+                  <label for="content-tags">Tags (separadas por vírgula):</label>
+                  <input type="text" id="content-tags" class="form-control" placeholder="Ex: reciclagem, plástico, meio ambiente">
+                </div>
+                
+                <div class="form-group">
+                  <label for="content-icon">Ícone:</label>
+                  <select id="content-icon" class="form-control" required>
+                    <option value="fa-recycle">Reciclagem</option>
+                    <option value="fa-seedling">Planta/Compostagem</option>
+                    <option value="fa-leaf">Folha/Natureza</option>
+                    <option value="fa-trash-restore">Gestão de Resíduos</option>
+                    <option value="fa-water">Água</option>
+                    <option value="fa-tree">Árvore</option>
+                    <option value="fa-sun">Sol/Energia</option>
+                    <option value="fa-bullhorn">Comunicado</option>
+                    <option value="fa-calendar-alt">Evento</option>
+                    <option value="fa-clock">Horário</option>
+                    <option value="fa-exclamation-circle">Alerta</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label for="content-summary">Resumo:</label>
+                  <textarea id="content-summary" class="form-control" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                  <label for="content-body">Conteúdo:</label>
+                  <div class="editor-toolbar">
+                    <button type="button" class="toolbar-btn" data-format="h2">H2</button>
+                    <button type="button" class="toolbar-btn" data-format="h3">H3</button>
+                    <button type="button" class="toolbar-btn" data-format="p">P</button>
+                    <button type="button" class="toolbar-btn" data-format="bold">B</button>
+                    <button type="button" class="toolbar-btn" data-format="italic">I</button>
+                    <button type="button" class="toolbar-btn" data-format="ul">Lista</button>
+                    <button type="button" class="toolbar-btn" data-format="ol">Lista Numerada</button>
+                    <button type="button" class="toolbar-btn" data-format="info-box">Caixa Info</button>
+                  </div>
+                  <textarea id="content-body" class="form-control content-editor" rows="15" required></textarea>
+                </div>
+                
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-green">Publicar</button>
+                  <button type="button" class="btn btn-outline-green" id="preview-btn">Pré-visualizar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content hidden" id="manage-content-tab">
+          <div class="card">
+            <div class="card-header">
+              <h3>Conteúdo Publicado</h3>
+            </div>
+            <div class="card-body">
+              <div class="content-filter">
+                <label>Filtrar por tipo:</label>
+                <div class="filter-options">
+                  <label class="filter-option">
+                    <input type="radio" name="content-filter" value="all" checked>
+                    <span class="filter-label">Todos</span>
+                  </label>
+                  <label class="filter-option">
+                    <input type="radio" name="content-filter" value="article">
+                    <span class="filter-label">Artigos</span>
+                  </label>
+                  <label class="filter-option">
+                    <input type="radio" name="content-filter" value="announcement">
+                    <span class="filter-label">Comunicados</span>
+                  </label>
+                </div>
+              </div>
+              
+              <div class="search-box">
+                <input type="text" id="search-content" class="form-control" placeholder="Buscar conteúdo...">
+                <button class="btn btn-light-gray"><i class="fas fa-search"></i></button>
+              </div>
+              
+              <div id="content-list" class="content-list">
+                <!-- O conteúdo será carregado dinamicamente aqui -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="preview-modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Pré-visualização</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="preview-content"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="confirmation-modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Confirmação</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmation-message">Tem certeza que deseja realizar esta ação?</p>
+        <div class="modal-actions">
+          <button id="confirm-yes" class="btn btn-red">Sim</button>
+          <button id="confirm-no" class="btn btn-outline-green">Não</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="data/content.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

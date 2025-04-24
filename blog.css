@@ -1,4 +1,288 @@
-<!DOCTYPE html>
+/* Blog Article Styles */
+.article-container {
+  padding-top: 100px;
+  padding-bottom: 50px;
+  max-width: 900px;
+}
+
+.blog-article {
+  background-color: var(--color-bg);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.article-header {
+  padding: var(--spacing-8) var(--spacing-8) var(--spacing-4);
+  text-align: center;
+}
+
+.article-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: var(--spacing-4);
+}
+
+.article-meta {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.article-meta span {
+  display: flex;
+  align-items: center;
+}
+
+.article-meta i {
+  margin-right: var(--spacing-2);
+}
+
+.article-featured-image {
+  background: linear-gradient(to right, var(--color-green-500), var(--color-blue-500));
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dark .article-featured-image {
+  background: linear-gradient(to right, #054b1f, #012485);
+}
+
+.featured-icon {
+  font-size: 5rem;
+  color: var(--color-white);
+}
+
+.article-content {
+  padding: var(--spacing-8);
+}
+
+.article-content h2 {
+  font-size: 1.8rem;
+  margin-top: var(--spacing-8);
+  margin-bottom: var(--spacing-4);
+  color: var(--color-green-700);
+}
+
+.dark .article-content h2 {
+  color: var(--color-green-400);
+}
+
+.article-content h3 {
+  font-size: 1.4rem;
+  margin-top: var(--spacing-6);
+  margin-bottom: var(--spacing-3);
+  color: var(--color-green-600);
+}
+
+.dark .article-content h3 {
+  color: var(--color-green-300);
+}
+
+.article-content p {
+  margin-bottom: var(--spacing-4);
+  line-height: 1.7;
+}
+
+.article-content ul,
+.article-content ol {
+  margin-bottom: var(--spacing-6);
+  padding-left: var(--spacing-6);
+}
+
+.article-content li {
+  margin-bottom: var(--spacing-2);
+  line-height: 1.7;
+}
+
+.article-image {
+  margin: var(--spacing-6) 0;
+  text-align: center;
+}
+
+.article-image img {
+  max-width: 100%;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.image-caption {
+  margin-top: var(--spacing-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.benefits-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.benefits-list li {
+  padding-left: var(--spacing-6);
+  position: relative;
+  margin-bottom: var(--spacing-4);
+}
+
+.benefits-list li::before {
+  content: "\f058";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  color: var(--color-green-500);
+  position: absolute;
+  left: 0;
+}
+
+.dark .benefits-list li::before {
+  color: var(--color-green-400);
+}
+
+.problems-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--spacing-6) 0;
+}
+
+.problems-table th {
+  background-color: var(--color-green-100);
+  color: var(--color-green-800);
+  padding: var(--spacing-3);
+  text-align: left;
+}
+
+.dark .problems-table th {
+  background-color: var(--color-green-800);
+  color: var(--color-green-100);
+}
+
+.problems-table td {
+  padding: var(--spacing-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.article-cta {
+  background-color: var(--color-green-50);
+  padding: var(--spacing-6);
+  border-radius: var(--border-radius-lg);
+  margin-top: var(--spacing-8);
+  text-align: center;
+}
+
+.dark .article-cta {
+  background-color: rgba(22, 101, 52, 0.2);
+}
+
+.article-cta h3 {
+  margin-top: 0;
+}
+
+.article-footer {
+  padding: var(--spacing-6) var(--spacing-8);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
+}
+
+.article-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
+}
+
+.article-share {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.share-link {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--color-gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-base);
+}
+
+.dark .share-link {
+  background-color: var(--color-gray-700);
+}
+
+.share-link:hover {
+  background-color: var(--color-green-500);
+  color: var(--color-white);
+}
+
+.related-articles {
+  padding: var(--spacing-6) var(--spacing-8);
+  background-color: var(--color-gray-50);
+}
+
+.dark .related-articles {
+  background-color: var(--color-gray-800);
+}
+
+.related-articles h3 {
+  margin-bottom: var(--spacing-6);
+  text-align: center;
+}
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--spacing-4);
+}
+
+.related-article {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4);
+  background-color: var(--color-white);
+  border-radius: var(--border-radius);
+  transition: var(--transition-base);
+}
+
+.dark .related-article {
+  background-color: var(--color-gray-700);
+}
+
+.related-article:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.related-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--color-green-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dark .related-image {
+  background-color: var(--color-green-800);
+}
+
+.related-image i {
+
+
+Agora, vamos atualizar a página inicial para exibir os artigos e comunicados dinamicamente:
+
+```html file="index.html"
+&lt;!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
@@ -8,7 +292,7 @@
   <title>ASCAMAREA - Associação de Catadores de Materiais Recicláveis</title>
   <link href="./imgs/logo.png" rel="icon" type="image/png"/>
   
-  <!-- Font Awesome -->
+  &lt;!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -94,7 +378,7 @@
         </button>
       </div>
 
-      <!-- Informações Tab -->
+      &lt;!-- Informações Tab -->
       <div class="tab-content" id="informacoes-tab">
         <div class="info-grid">
           <div class="info-content">
@@ -151,7 +435,7 @@
         </div>
       </div>
 
-      <!-- Mapa Tab -->
+      &lt;!-- Mapa Tab -->
       <div class="tab-content hidden" id="mapa-tab">
         <div class="card">
           <div class="card-header">
@@ -226,7 +510,7 @@
         </div>
       </div>
 
-      <!-- Calendário Tab -->
+      &lt;!-- Calendário Tab -->
       <div class="tab-content hidden" id="calendario-tab">
         <div class="card">
           <div class="card-header">
@@ -295,7 +579,7 @@
                     <div>Sáb</div>
                   </div>
                   <div id="calendar-days" class="calendar-days">
-                    <!-- Calendar days will be generated by JavaScript -->
+                    &lt;!-- Calendar days will be generated by JavaScript -->
                   </div>
                 </div>
               </div>
@@ -384,128 +668,44 @@
         </div>
       </div>
 
-      <!-- Blog Tab -->
+      &lt;!-- Blog Tab -->
       <div class="tab-content hidden" id="blog-tab">
-  <div class="card">
-    <div class="card-body">
-      <h3 class="section-title-lg">Blog Ambiental</h3>
-      <p class="mb-medium">Artigos e informações sobre reciclagem, compostagem e outros temas ambientais baseados em evidências científicas.</p>
-      
-      <div class="blog-posts-grid">
-        <!-- Blog Post 1 -->
-        <div class="blog-post">
-          <div class="blog-post-image">
-            <i class="fas fa-recycle blog-icon"></i>
-          </div>
-          <div class="blog-post-content">
-            <h4>Reciclagem: Por que é tão importante?</h4>
-            <div class="blog-post-meta">
-              <span><i class="fas fa-calendar-alt"></i> 15/04/2023</span>
-              <span><i class="fas fa-user"></i> Equipe ASCAMAREA</span>
+        <div class="card">
+          <div class="card-body">
+            <div class="blog-header">
+              <h3 class="section-title-lg">Blog Ambiental</h3>
+              <div class="blog-tabs">
+                <button class="blog-tab-btn active" data-content-type="all">Todos</button>
+                <button class="blog-tab-btn" data-content-type="article">Artigos</button>
+                <button class="blog-tab-btn" data-content-type="announcement">Comunicados</button>
+              </div>
             </div>
-            <p class="blog-post-excerpt">A reciclagem é um dos processos mais importantes para a preservação do meio ambiente. Neste artigo, explicamos os fundamentos da reciclagem, seus benefícios e como você pode contribuir.</p>
-            <div class="blog-post-topics">
-              <h5>Tópicos abordados:</h5>
-              <ul>
-                <li>Princípios básicos da reciclagem</li>
-                <li>Identificação de materiais recicláveis</li>
-                <li>Impacto ambiental da reciclagem</li>
-                <li>Economia circular</li>
-              </ul>
+            
+            <p class="mb-medium">Artigos e informações sobre reciclagem, compostagem e outros temas ambientais baseados em evidências científicas.</p>
+            
+            &lt;!-- Comunicados (Avisos) -->
+            <div id="announcements-container" class="announcements-container mb-medium">
+              &lt;!-- Comunicados serão carregados dinamicamente aqui -->
             </div>
-            <a href="artigo-reciclagem.html" class="btn btn-green">Ler artigo completo</a>
-          </div>
-        </div>
-        
-        <!-- Blog Post 2 -->
-        <div class="blog-post">
-          <div class="blog-post-image">
-            <i class="fas fa-seedling blog-icon"></i>
-          </div>
-          <div class="blog-post-content">
-            <h4>Compostagem: Transformando resíduos em vida</h4>
-            <div class="blog-post-meta">
-              <span><i class="fas fa-calendar-alt"></i> 02/04/2023</span>
-              <span><i class="fas fa-user"></i> Dra. Ana Silva</span>
+            
+            &lt;!-- Artigos do Blog -->
+            <div id="blog-posts-container" class="blog-posts-grid">
+              &lt;!-- Artigos serão carregados dinamicamente aqui -->
             </div>
-            <p class="blog-post-excerpt">A compostagem é uma técnica milenar que permite transformar resíduos orgânicos em adubo rico em nutrientes. Descubra como iniciar sua composteira doméstica.</p>
-            <div class="blog-post-topics">
-              <h5>Tópicos abordados:</h5>
-              <ul>
-                <li>Fundamentos da compostagem</li>
-                <li>Montagem de composteira caseira</li>
-                <li>Materiais compostáveis e não-compostáveis</li>
-                <li>Manutenção e solução de problemas</li>
-              </ul>
+            
+            <div class="info-box green">
+              <h4 class="info-title">
+                <i class="fas fa-info-circle"></i>
+                Sobre nosso blog
+              </h4>
+              <p>Todos os artigos são escritos por especialistas e baseados em evidências científicas. O conteúdo é atualizado regularmente para refletir as mais recentes pesquisas e práticas na área ambiental.</p>
+              <p>Nosso objetivo é compartilhar conhecimento e promover práticas sustentáveis acessíveis a todos.</p>
             </div>
-            <a href="artigo-compostagem.html" class="btn btn-green">Ler artigo completo</a>
-          </div>
-        </div>
-        
-        <!-- Blog Post 3 -->
-        <div class="blog-post">
-          <div class="blog-post-image">
-            <i class="fas fa-leaf blog-icon"></i>
-          </div>
-          <div class="blog-post-content">
-            <h4>Consumo Consciente: Pequenas mudanças, grandes impactos</h4>
-            <div class="blog-post-meta">
-              <span><i class="fas fa-calendar-alt"></i> 20/03/2023</span>
-              <span><i class="fas fa-user"></i> Prof. Carlos Mendes</span>
-            </div>
-            <p class="blog-post-excerpt">Nossas escolhas diárias de consumo têm um impacto significativo no meio ambiente. Aprenda como fazer escolhas mais sustentáveis e reduzir sua pegada ecológica.</p>
-            <div class="blog-post-topics">
-              <h5>Tópicos abordados:</h5>
-              <ul>
-                <li>Pegada ecológica</li>
-                <li>Redução de desperdício</li>
-                <li>Escolhas de produtos sustentáveis</li>
-                <li>Minimalismo e simplicidade voluntária</li>
-              </ul>
-            </div>
-            <a href="artigo-consumo-consciente.html" class="btn btn-green">Ler artigo completo</a>
-          </div>
-        </div>
-        
-        <!-- Blog Post 4 -->
-        <div class="blog-post">
-          <div class="blog-post-image">
-            <i class="fas fa-trash-restore blog-icon"></i>
-          </div>
-          <div class="blog-post-content">
-            <h4>Gestão de Resíduos: Desafios e soluções para cidades sustentáveis</h4>
-            <div class="blog-post-meta">
-              <span><i class="fas fa-calendar-alt"></i> 05/03/2023</span>
-              <span><i class="fas fa-user"></i> Eng. Roberto Almeida</span>
-            </div>
-            <p class="blog-post-excerpt">A gestão adequada de resíduos é um dos maiores desafios das cidades modernas. Conheça as melhores práticas e como podemos contribuir para uma gestão mais eficiente.</p>
-            <div class="blog-post-topics">
-              <h5>Tópicos abordados:</h5>
-              <ul>
-                <li>Hierarquia de gestão de resíduos</li>
-                <li>Políticas públicas e legislação</li>
-                <li>Logística reversa</li>
-                <li>Tecnologias de tratamento</li>
-              </ul>
-            </div>
-            <a href="artigo-gestao-residuos.html" class="btn btn-green">Ler artigo completo</a>
           </div>
         </div>
       </div>
-      
-      <div class="info-box green">
-        <h4 class="info-title">
-          <i class="fas fa-info-circle"></i>
-          Sobre nosso blog
-        </h4>
-        <p>Todos os artigos são escritos por especialistas e baseados em evidências científicas. O conteúdo é atualizado regularmente para refletir as mais recentes pesquisas e práticas na área ambiental.</p>
-        <p>Nosso objetivo é compartilhar conhecimento e promover práticas sustentáveis acessíveis a todos.</p>
-      </div>
-    </div>
-  </div>
-</div>
 
-      <!-- Gamificação Tab -->
+      &lt;!-- Gamificação Tab -->
       <div class="tab-content hidden" id="gamificacao-tab">
         <div class="card">
           <div class="card-body">
@@ -526,7 +726,7 @@
                 </div>
                 
                 <div id="game-container" class="game-content-area">
-                  <!-- Tela inicial -->
+                  &lt;!-- Tela inicial -->
                   <div id="game-start-screen" class="game-screen text-center">
                     <div class="game-intro">
                       <i class="fas fa-recycle text-green game-icon"></i>
@@ -562,7 +762,7 @@
                     </button>
                   </div>
                   
-                  <!-- Tela de jogo (inicialmente oculta) -->
+                  &lt;!-- Tela de jogo (inicialmente oculta) -->
                   <div id="game-question-screen" class="game-screen hidden">
                     <div class="question-header">
                       <div class="question-counter">
@@ -581,11 +781,11 @@
                     </div>
                     
                     <div id="answers-container" class="answers-grid">
-                      <!-- As opções serão geradas pelo JavaScript -->
+                      &lt;!-- As opções serão geradas pelo JavaScript -->
                     </div>
                   </div>
                   
-                  <!-- Tela de resultado (inicialmente oculta) -->
+                  &lt;!-- Tela de resultado (inicialmente oculta) -->
                   <div id="game-result-screen" class="game-screen hidden text-center">
                     <div class="result-header">
                       <i id="result-icon" class="fas fa-award text-yellow result-icon"></i>
@@ -634,7 +834,7 @@
         </div>
       </div>
 
-      <!-- Preços Tab -->
+      &lt;!-- Preços Tab -->
       <div class="tab-content hidden" id="precos-tab">
         <div class="card">
           <div class="card-header">
@@ -783,64 +983,3 @@
               <h3 class="info-title">Informações Importantes</h3>
               <ul class="info-list">
                 <li>Os preços são referentes a materiais limpos e separados corretamente.</li>
-                <li>Materiais contaminados podem ter valor reduzido ou serem recusados.</li>
-                <li>Para grandes volumes, entre em contato para negociar valores diferenciados.</li>
-                <li>Última atualização: 01/06/2023</li>
-              </ul>
-            </div>
-
-            <div class="action-buttons">
-              <button class="btn btn-green">
-                Solicitar Coleta
-              </button>
-              <button class="btn btn-outline-green">
-                Baixar Tabela Completa (PDF)
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- Footer -->
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-col">
-          <h3>ASCAMAREA</h3>
-          <p>Transformando resíduos em recursos, gerando renda e dignidade para catadores.</p>
-          <div class="social-links">
-            <a href="#" class="social-link">Facebook</a>
-            <a href="#" class="social-link">Instagram</a>
-            <a href="#" class="social-link">Twitter</a>
-          </div>
-        </div>
-        <div class="footer-col">
-          <h3>Links Rápidos</h3>
-          <ul class="footer-links">
-            <li><a href="#sobre" class="nav-link">Sobre Nós</a></li>
-            <li><a href="#mapa" class="nav-link">Mapa de Coleta</a></li>
-            <li><a href="#calendario" class="nav-link">Calendário</a></li>
-            <li><a href="#blog" class="nav-link">Blog</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h3>Contato</h3>
-          <ul class="contact-info">
-            <li>Av. Reciclagem, 123 - Centro</li>
-            <li>contato@ascamarea.org</li>
-            <li>(00) 00000-0000</li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2023 ASCAMAREA. Todos os direitos reservados.</p>
-      </div>
-    </div>
-  </footer>
-
-  <!-- JavaScript -->
-  <script src="script.js"></script>
-</body>
-</html>

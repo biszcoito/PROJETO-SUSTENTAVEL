@@ -1,12 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
   // Dark mode toggle
   const darkModeToggle = document.getElementById("darkModeToggle")
-
   // Check for saved dark mode preference
   if (localStorage.getItem("darkMode") === "enabled") {
     document.documentElement.classList.add("dark")
     darkModeToggle.checked = true
   }
+  document.documentElement.classList.add("dark")
+  darkModeToggle.checked = true
 
   darkModeToggle.addEventListener("change", function () {
     if (this.checked) {
@@ -30,6 +31,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const navLinks = document.querySelectorAll(".nav-link")
   navLinks.forEach((link) => {
     link.addEventListener("click", function (e) {
+      // Não previna o comportamento padrão se for um link para outra página
+      if (this.getAttribute("href").includes(".html")) {
+        return
+      }
+
       e.preventDefault()
 
       // Get the target tab ID from the href
@@ -80,11 +86,103 @@ document.addEventListener("DOMContentLoaded", () => {
         initializeQuizGame()
       } else if (tabName === "calendario") {
         generateCalendar()
-      } else if (tabName === "catadores") {
-        initializeCatadoresLogin()
+      } else if (tabName === "blog") {
+        loadBlogContent()
       }
     })
   })
+
+  // Carregar conteúdo do blog dinamicamente
+  function loadBlogContent() {
+    const blogTab = document.getElementById("blog-tab")
+    if (!blogTab) return
+
+    // Verificar se o conteúdo já foi carregado
+    if (blogTab.getAttribute("data-loaded") === "true") return
+
+    // Marcar como carregado
+    blogTab.setAttribute("data-loaded", "true")
+
+    // Obter o elemento onde os posts serão exibidos
+    const blogPostsGrid = blogTab.querySelector(".blog-posts-grid")
+    if (!blogPostsGrid) return
+
+    // Limpar conteúdo existente
+    blogPostsGrid.innerHTML = ""
+
+    // Verificar se o objeto blogData está disponível
+    if (typeof window.blogData === "undefined") {
+      console.error("Dados do blog não estão disponíveis")
+      return
+    }
+
+    // Obter todos os artigos
+    const articles = window.blogData.getContentByType("article")
+
+    // Obter comunicados
+    const announcements = window.blogData.getContentByType("announcement")
+
+    // Exibir comunicados primeiro (se houver)
+    if (announcements && announcements.length > 0) {
+      announcements.forEach((announcement) => {
+        blogPostsGrid.appendChild(createBlogPostElement(announcement))
+      })
+    }
+
+    // Exibir artigos
+    if (articles && articles.length > 0) {
+      articles.forEach((article) => {
+        blogPostsGrid.appendChild(createBlogPostElement(article))
+      })
+    }
+  }
+
+  // Função para criar elemento de post do blog
+  function createBlogPostElement(content) {
+    const postElement = document.createElement("div")
+    postElement.className = "blog-post"
+
+    // Adicionar classe especial para comunicados
+    if (content.type === "announcement") {
+      postElement.classList.add("announcement-post")
+    }
+
+    // Formatar data
+    const date = new Date(content.date)
+    const formattedDate = `${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1).toString().padStart(2, "0")}/${date.getFullYear()}`
+
+    // Criar tópicos
+    let topicsHTML = ""
+    if (content.tags && content.tags.length > 0) {
+      const topics = content.tags.slice(0, 4) // Limitar a 4 tópicos
+      topicsHTML = `
+        <div class="blog-post-topics">
+          <h5>Tópicos abordados:</h5>
+          <ul>
+            ${topics.map((topic) => `<li>${topic}</li>`).join("")}
+          </ul>
+        </div>
+      `
+    }
+
+    postElement.innerHTML = `
+      <div class="blog-post-image">
+        <i class="fas ${content.icon} blog-icon"></i>
+      </div>
+      <div class="blog-post-content">
+        <h4>${content.title}</h4>
+        <div class="blog-post-meta">
+          <span><i class="fas fa-calendar-alt"></i> ${formattedDate}</span>
+          ${content.author ? `<span><i class="fas fa-user"></i> ${content.author}</span>` : ""}
+        </div>
+        <p class="blog-post-excerpt">${content.summary}</p>
+        ${topicsHTML}
+        <a href="content-view.html?id=${content.id}" class="btn btn-green">Ler ${content.type === "article" ? "artigo" : "comunicado"} completo</a>
+      </div>
+    `
+
+    return postElement
+  }
 
   // Calendar generation
   function generateCalendar() {
@@ -236,82 +334,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Initial render
     renderCalendar()
-  }
-
-  // Catadores Login
-  function initializeCatadoresLogin() {
-    const loginForm = document.getElementById("catador-login-form")
-    const loginMessage = document.getElementById("login-message")
-    const catadorArea = document.getElementById("catador-area")
-    const logoutButton = document.getElementById("logout-button")
-
-    if (!loginForm || !loginMessage || !catadorArea || !logoutButton) return
-
-    // Check if already logged in
-    if (localStorage.getItem("catadorLoggedIn") === "true") {
-      showLoggedInArea()
-    }
-
-    loginForm.addEventListener("submit", (e) => {
-      e.preventDefault()
-
-      const username = document.getElementById("username").value
-      const password = document.getElementById("password").value
-
-      // Simple validation
-      if (!username || !password) {
-        showMessage("Por favor, preencha todos os campos.", "error")
-        return
-      }
-
-      // Mock login - in a real app, this would be a server request
-      if (username === "catador" && password === "123456") {
-        showMessage("Login realizado com sucesso!", "success")
-
-        // Save login state
-        if (document.getElementById("remember-me").checked) {
-          localStorage.setItem("catadorLoggedIn", "true")
-        }
-
-        // Show logged in area after a short delay
-        setTimeout(() => {
-          showLoggedInArea()
-        }, 1000)
-      } else {
-        showMessage("Usuário ou senha incorretos.", "error")
-      }
-    })
-
-    logoutButton.addEventListener("click", () => {
-      // Hide logged in area
-      catadorArea.classList.add("hidden")
-      loginForm.classList.remove("hidden")
-      loginMessage.classList.add("hidden")
-
-      // Clear form
-      document.getElementById("username").value = ""
-      document.getElementById("password").value = ""
-
-      // Remove login state
-      localStorage.removeItem("catadorLoggedIn")
-    })
-
-    function showMessage(message, type) {
-      loginMessage.textContent = message
-      loginMessage.classList.remove("hidden", "success", "error")
-
-      if (type === "success") {
-        loginMessage.classList.add("success")
-      } else {
-        loginMessage.classList.add("error")
-      }
-    }
-
-    function showLoggedInArea() {
-      loginForm.classList.add("hidden")
-      catadorArea.classList.remove("hidden")
-      document.getElementById("catador-name").textContent = "João Silva" // This would come from the server
-    }
   }
 
   // Quiz Game
@@ -611,14 +633,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Carregar o script de dados do blog
+  function loadBlogData() {
+    if (typeof window.blogData === "undefined") {
+      const script = document.createElement("script")
+      script.src = "data/content.js"
+      script.onload = () => {
+        // Inicializar o conteúdo do blog se estiver na aba do blog
+        const activeTab = document.querySelector(".tab-btn.active")
+        if (activeTab && activeTab.getAttribute("data-tab") === "blog") {
+          loadBlogContent()
+        }
+      }
+      document.body.appendChild(script)
+    }
+  }
+
+  // Carregar dados do blog
+  loadBlogData()
+
   // Initialize the appropriate tab content based on the active tab
   const activeTab = document.querySelector(".tab-btn.active").getAttribute("data-tab")
   if (activeTab === "gamificacao") {
     initializeQuizGame()
   } else if (activeTab === "calendario") {
     generateCalendar()
-  } else if (activeTab === "catadores") {
-    initializeCatadoresLogin()
+  } else if (activeTab === "blog") {
+    loadBlogContent()
   }
 })
-
