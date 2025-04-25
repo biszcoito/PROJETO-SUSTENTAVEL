@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   const ADMIN_USERNAME = "admin"; // Nome de usuário de exemplo
-  const ADMIN_PASSWORD = "ascamarea2023"; // Esta é apenas uma senha de exemplo
+  const ADMIN_PASSWORD = "admin"; // Esta é apenas uma senha de exemplo
   // Verificar se o usuário já está logado
   checkLoginStatus();
 
