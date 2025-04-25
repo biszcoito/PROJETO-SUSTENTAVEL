@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Elementos do DOM
   const loginSection = document.getElementById("login-section")
   const adminPanel = document.getElementById("admin-panel")
   const loginForm = document.getElementById("login-form")
@@ -24,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   const ADMIN_USERNAME = "admin"; // Nome de usuário de exemplo
-  const ADMIN_PASSWORD = "admin"; // Esta é apenas uma senha de exemplo
+  const ADMIN_PASSWORD = "ascamarea2025"; // Esta é apenas uma senha de exemplo
   // Verificar se o usuário já está logado
   checkLoginStatus();
 
@@ -66,7 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
       confirmationModal.classList.add("hidden")
     })
   })
-
   // Alternar entre abas
   tabButtons.forEach((button) => {
     button.addEventListener("click", function () {
@@ -183,9 +181,6 @@ document.addEventListener("DOMContentLoaded", () => {
         .map((tag) => tag.trim())
         .filter((tag) => tag)
     }
-
-    // Em um sistema real, aqui você enviaria os dados para o servidor
-    // para salvar no banco de dados ou em um arquivo JSON
 
     // Simulação de envio bem-sucedido
     window.blogData.addContent(content)
