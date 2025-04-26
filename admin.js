@@ -1,470 +1,467 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // Elementos DOM
   const loginSection = document.getElementById("login-section")
-  const adminPanel = document.getElementById("admin-panel")
+  const adminDashboard = document.getElementById("admin-dashboard")
   const loginForm = document.getElementById("login-form")
-  const loginError = document.getElementById("login-error")
   const logoutBtn = document.getElementById("logout-btn")
+  const contentTab = document.getElementById("content-tab")
+  const createTab = document.getElementById("create-tab")
+  const tabButtons = document.querySelectorAll(".admin-tab-btn")
   const contentForm = document.getElementById("content-form")
-  const previewBtn = document.getElementById("preview-btn")
-  const previewModal = document.getElementById("preview-modal")
-  const previewContent = document.getElementById("preview-content")
-  const confirmationModal = document.getElementById("confirmation-modal")
-  const confirmMessage = document.getElementById("confirmation-message")
-  const confirmYes = document.getElementById("confirm-yes")
-  const confirmNo = document.getElementById("confirm-no")
-  const closeModalButtons = document.querySelectorAll(".close-modal")
-  const tabButtons = document.querySelectorAll(".tab-btn")
-  const tabContents = document.querySelectorAll(".tab-content")
-  const toolbarButtons = document.querySelectorAll(".toolbar-btn")
-  const contentTypeRadios = document.querySelectorAll('input[name="content-type"]')
-  const contentFilterRadios = document.querySelectorAll('input[name="content-filter"]')
+  const contentTypeSelect = document.getElementById("content-type")
+  const articleFields = document.getElementById("article-fields")
   const contentList = document.getElementById("content-list")
-  const searchContent = document.getElementById("search-content")
+  const contentFilter = document.getElementById("content-filter")
+  const contentSearch = document.getElementById("content-search")
+  const searchBtn = document.getElementById("search-btn")
+  const cancelBtn = document.getElementById("cancel-btn")
+  const previewBtn = document.getElementById("preview-btn")
+  const contentPreview = document.getElementById("content-preview")
+  const openIconSelector = document.getElementById("open-icon-selector")
+  const iconGrid = document.getElementById("icon-grid")
+  const iconItems = document.querySelectorAll(".icon-item")
+  const selectedIconPreview = document.getElementById("selected-icon-preview")
+  const contentIconInput = document.getElementById("content-icon")
+  const confirmationModal = document.getElementById("confirmation-modal")
+  const modalTitle = document.getElementById("modal-title")
+  const modalMessage = document.getElementById("modal-message")
+  const modalConfirm = document.getElementById("modal-confirm")
+  const modalCancel = document.getElementById("modal-cancel")
+  const closeModal = document.getElementById("close-modal")
+  const toast = document.getElementById("toast")
+  const toastContent = document.getElementById("toast-content")
+  const contentBodyInput = document.getElementById("content-body")
+  const darkModeToggle = document.getElementById("darkModeToggle")
+  const mobileMenuButton = document.getElementById("mobileMenuButton")
+  const mobileMenu = document.getElementById("mobileMenu")
 
+  // Inicializar o editor Quill
+  let quill = null
+  try {
+    quill = new Quill("#editor-container", {
+      modules: {
+        toolbar: [
+          [{ header: [1, 2, 3, false] }],
+          ["bold", "italic", "underline"],
+          [{ list: "ordered" }, { list: "bullet" }],
+          ["link", "image"],
+          ["clean"],
+        ],
+      },
+      placeholder: "Escreva seu conteúdo aqui...",
+      theme: "snow",
+    })
+  } catch (error) {
+    console.error("Quill editor could not be initialized:", error)
+  }
 
-  const ADMIN_USERNAME = "admin"; // Nome de usuário de exemplo
-  const ADMIN_PASSWORD = "ascamarea2025"; // Esta é apenas uma senha de exemplo
-  // Verificar se o usuário já está logado
-  checkLoginStatus();
+  // Verificar modo escuro
+  if (localStorage.getItem("darkMode") === "enabled") {
+    document.documentElement.classList.add("dark")
+    darkModeToggle.checked = true
+  }
+
+  // Toggle modo escuro
+  darkModeToggle.addEventListener("change", function () {
+    if (this.checked) {
+      document.documentElement.classList.add("dark")
+      localStorage.setItem("darkMode", "enabled")
+    } else {
+      document.documentElement.classList.remove("dark")
+      localStorage.setItem("darkMode", "disabled")
+    }
+  })
+
+  // Toggle menu mobile
+  mobileMenuButton.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden")
+  })
+
+  // Verificar se o usuário está logado
+  checkLoginStatus()
 
   // Event Listeners
-  if (loginForm) {
-    loginForm.addEventListener("submit", handleLogin);
-  }
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", handleLogout)
-  }
-
-  if (contentForm) {
-    contentForm.addEventListener("submit", handleContentSubmit)
-  }
-
-  if (previewBtn) {
-    previewBtn.addEventListener("click", showPreview)
-  }
-
-  // Alternar campos com base no tipo de conteúdo
-  contentTypeRadios.forEach((radio) => {
-    radio.addEventListener("change", toggleContentFields)
-  })
-
-  // Filtrar conteúdo
-  contentFilterRadios.forEach((radio) => {
-    radio.addEventListener("change", filterContent)
-  })
-
-  // Buscar conteúdo
-  if (searchContent) {
-    searchContent.addEventListener("input", filterContent)
-  }
-
-  // Fechar modais
-  closeModalButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      previewModal.classList.add("hidden")
-      confirmationModal.classList.add("hidden")
-    })
-  })
-  // Alternar entre abas
+  loginForm.addEventListener("submit", handleLogin)
+  logoutBtn.addEventListener("click", handleLogout)
   tabButtons.forEach((button) => {
-    button.addEventListener("click", function () {
-      const tabName = this.getAttribute("data-tab")
-
-      // Atualizar botão ativo
-      tabButtons.forEach((btn) => {
-        btn.classList.remove("active")
-      })
-      this.classList.add("active")
-
-      // Mostrar conteúdo da aba selecionada
-      tabContents.forEach((content) => {
-        content.classList.add("hidden")
-      })
-      document.getElementById(`${tabName}-tab`).classList.remove("hidden")
-
-      // Carregar conteúdo se estiver na aba de gerenciamento
-      if (tabName === "manage-content") {
-        loadContent()
-      }
-    })
+    button.addEventListener("click", switchTab)
   })
-
-  // Botões da barra de ferramentas do editor
-  toolbarButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const format = button.getAttribute("data-format")
-      formatText(format)
-    })
+  contentTypeSelect.addEventListener("change", toggleArticleFields)
+  contentForm.addEventListener("submit", handleContentSubmit)
+  contentFilter.addEventListener("change", filterContent)
+  searchBtn.addEventListener("click", searchContent)
+  contentSearch.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      searchContent()
+    }
   })
+  cancelBtn.addEventListener("click", resetForm)
+  previewBtn.addEventListener("click", togglePreview)
+  openIconSelector.addEventListener("click", toggleIconGrid)
+  iconItems.forEach((item) => {
+    item.addEventListener("click", selectIcon)
+  })
+  modalCancel.addEventListener("click", closeConfirmationModal)
+  closeModal.addEventListener("click", closeConfirmationModal)
 
   // Funções
   function checkLoginStatus() {
     const isLoggedIn = localStorage.getItem("adminLoggedIn") === "true"
+
     if (isLoggedIn) {
-      showAdminPanel()
+      loginSection.classList.add("hidden")
+      adminDashboard.classList.remove("hidden")
+      loadContent()
     } else {
-      showLoginForm()
+      loginSection.classList.remove("hidden")
+      adminDashboard.classList.add("hidden")
     }
   }
 
   function handleLogin(e) {
     e.preventDefault()
-    const password = document.getElementById("password").value
 
-    if (password === ADMIN_PASSWORD) {
+    const username = document.getElementById("username").value
+    const password = document.getElementById("password").value
+    
+    if (username === "admin" && password === "admin") {
       localStorage.setItem("adminLoggedIn", "true")
-      showAdminPanel()
+      loginSection.classList.add("hidden")
+      adminDashboard.classList.remove("hidden")
+      loadContent()
+      showToast("Login realizado com sucesso!")
     } else {
-      loginError.classList.remove("hidden")
+      showToast("Credenciais inválidas. Tente novamente.", true)
     }
   }
 
   function handleLogout() {
     localStorage.removeItem("adminLoggedIn")
-    showLoginForm()
-  }
-
-  function showLoginForm() {
-    adminPanel.classList.add("hidden")
     loginSection.classList.remove("hidden")
+    adminDashboard.classList.add("hidden")
+    showToast("Logout realizado com sucesso!")
   }
 
-  function showAdminPanel() {
-    loginSection.classList.add("hidden")
-    adminPanel.classList.remove("hidden")
+  function switchTab() {
+    const tabName = this.getAttribute("data-tab")
+
+    // Atualizar botões
+    tabButtons.forEach((btn) => btn.classList.remove("active"))
+    this.classList.add("active")
+
+    // Mostrar conteúdo da aba
+    if (tabName === "content") {
+      contentTab.classList.remove("hidden")
+      createTab.classList.add("hidden")
+      loadContent()
+    } else if (tabName === "create") {
+      contentTab.classList.add("hidden")
+      createTab.classList.remove("hidden")
+      resetForm()
+    }
   }
 
-  function toggleContentFields() {
-    const contentType = document.querySelector('input[name="content-type"]:checked').value
-    const articleFields = document.querySelectorAll(".article-field")
+  function toggleArticleFields() {
+    const contentType = contentTypeSelect.value
 
     if (contentType === "article") {
-      articleFields.forEach((field) => (field.style.display = "block"))
+      articleFields.classList.remove("hidden")
     } else {
-      articleFields.forEach((field) => (field.style.display = "none"))
+      articleFields.classList.add("hidden")
     }
+  }
+
+  function loadContent(filter = "all", searchQuery = "") {
+    if (!window.blogData) {
+      showToast("Erro ao carregar dados do blog.", true)
+      return
+    }
+
+    let contents = []
+
+    if (filter === "all") {
+      contents = window.blogData.getAllContent()
+    } else {
+      contents = window.blogData.getContentByType(filter)
+    }
+
+    // Aplicar busca se houver
+    if (searchQuery) {
+      searchQuery = searchQuery.toLowerCase()
+      contents = contents.filter(
+        (content) =>
+          content.title.toLowerCase().includes(searchQuery) ||
+          content.summary.toLowerCase().includes(searchQuery) ||
+          (content.content && content.content.toLowerCase().includes(searchQuery)),
+      )
+    }
+
+    // Ordenar por data (mais recente primeiro)
+    contents.sort((a, b) => new Date(b.date) - new Date(a.date))
+
+    // Limpar lista
+    contentList.innerHTML = ""
+
+    if (contents.length === 0) {
+      contentList.innerHTML = `
+        <tr>
+          <td colspan="4" class="text-center">Nenhum conteúdo encontrado.</td>
+        </tr>
+      `
+      return
+    }
+
+    // Preencher lista
+    contents.forEach((content) => {
+      const date = new Date(content.date)
+      const formattedDate = `${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1).toString().padStart(2, "0")}/${date.getFullYear()}`
+
+      const row = document.createElement("tr")
+      row.innerHTML = `
+        <td>${content.title}</td>
+        <td>${content.type === "article" ? "Artigo" : "Comunicado"}</td>
+        <td>${formattedDate}</td>
+        <td>
+          <div class="action-buttons">
+            <button class="btn btn-sm btn-outline-green edit-btn" data-id="${content.id}">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-green view-btn" data-id="${content.id}">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-green delete-btn" data-id="${content.id}">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </td>
+      `
+
+      contentList.appendChild(row)
+    })
+
+    // Adicionar event listeners para os botões de ação
+    document.querySelectorAll(".edit-btn").forEach((btn) => {
+      btn.addEventListener("click", () => editContent(btn.getAttribute("data-id")))
+    })
+
+    document.querySelectorAll(".view-btn").forEach((btn) => {
+      btn.addEventListener("click", () => viewContent(btn.getAttribute("data-id")))
+    })
+
+    document.querySelectorAll(".delete-btn").forEach((btn) => {
+      btn.addEventListener("click", () => deleteContent(btn.getAttribute("data-id")))
+    })
+  }
+
+  function filterContent() {
+    const filter = contentFilter.value
+    const searchQuery = contentSearch.value
+    loadContent(filter, searchQuery)
+  }
+
+  function searchContent() {
+    const filter = contentFilter.value
+    const searchQuery = contentSearch.value
+    loadContent(filter, searchQuery)
   }
 
   function handleContentSubmit(e) {
     e.preventDefault()
 
     // Obter valores do formulário
-    const contentType = document.querySelector('input[name="content-type"]:checked').value
+    const type = contentTypeSelect.value
     const title = document.getElementById("content-title").value
-    const author = document.getElementById("content-author")?.value || ""
-    const category = document.getElementById("content-category").value
-    const tags = document.getElementById("content-tags")?.value || ""
-    const icon = document.getElementById("content-icon").value
     const summary = document.getElementById("content-summary").value
-    const body = document.getElementById("content-body").value
+    const category = document.getElementById("content-category").value
+    const icon = contentIconInput.value
 
-    // Gerar ID a partir do título
-    const id = generateSlug(title)
+    // Obter conteúdo do editor
+    const content = quill.root.innerHTML
+    contentBodyInput.value = content
+
+    // Validar campos obrigatórios
+    if (!type || !title || !summary) {
+      showToast("Por favor, preencha todos os campos obrigatórios.", true)
+      return
+    }
 
     // Criar objeto de conteúdo
-    const content = {
-      id,
-      type: contentType,
+    const contentObj = {
+      id: Date.now().toString(), // ID único baseado no timestamp
+      type,
       title,
-      date: new Date().toISOString().split("T")[0], // Formato YYYY-MM-DD
+      summary,
       category,
       icon,
-      summary,
-      content: formatContentForStorage(body),
+      content,
+      date: new Date().toISOString(),
     }
 
     // Adicionar campos específicos para artigos
-    if (contentType === "article") {
-      content.author = author
-      content.tags = tags
-        .split(",")
-        .map((tag) => tag.trim())
-        .filter((tag) => tag)
+    if (type === "article") {
+      contentObj.author = document.getElementById("content-author").value || "Equipe ASCAMAREA"
+
+      const tagsInput = document.getElementById("content-tags").value
+      if (tagsInput) {
+        contentObj.tags = tagsInput.split(",").map((tag) => tag.trim())
+      }
     }
 
-    // Simulação de envio bem-sucedido
-    window.blogData.addContent(content)
+    // Salvar conteúdo
+    if (window.blogData) {
+      window.blogData.addContent(contentObj)
+      showToast("Conteúdo salvo com sucesso!")
+      resetForm()
 
-    showConfirmation(`${contentType === "article" ? "Artigo" : "Comunicado"} publicado com sucesso!`, () => {
-      contentForm.reset()
-      // Redirecionar para a visualização do conteúdo
-      window.location.href = `content-view.html?id=${id}`
-    })
-  }
-
-  function loadContent() {
-    if (!contentList) return
-
-    // Obter todo o conteúdo
-    const allContent = window.blogData.getAllContent()
-
-    // Aplicar filtros
-    const filteredContent = filterContentItems(allContent)
-
-    // Limpar lista
-    contentList.innerHTML = ""
-
-    // Adicionar itens à lista
-    if (filteredContent.length === 0) {
-      contentList.innerHTML = '<div class="empty-message">Nenhum conteúdo encontrado.</div>'
+      // Voltar para a aba de gerenciamento
+      document.querySelector('.admin-tab-btn[data-tab="content"]').click()
     } else {
-      filteredContent.forEach((item) => {
-        const contentItem = document.createElement("div")
-        contentItem.className = `content-item ${item.type}`
-
-        contentItem.innerHTML = `
-          <div class="content-info">
-            <h4>${item.title}</h4>
-            <div class="content-meta">
-              <span><i class="fas fa-calendar-alt"></i> ${formatDate(item.date)}</span>
-              ${item.type === "article" ? `<span><i class="fas fa-user"></i> ${item.author}</span>` : ""}
-              <span><i class="fas ${item.type === "article" ? "fa-newspaper" : "fa-bullhorn"}"></i> ${item.type === "article" ? "Artigo" : "Comunicado"}</span>
-            </div>
-          </div>
-          <div class="content-actions">
-            <a href="content-view.html?id=${item.id}" class="btn btn-sm btn-outline-green" target="_blank">Ver</a>
-            <button class="btn btn-sm btn-outline-green edit-content" data-id="${item.id}">Editar</button>
-            <button class="btn btn-sm btn-outline-red delete-content" data-id="${item.id}">Excluir</button>
-          </div>
-        `
-
-        contentList.appendChild(contentItem)
-      })
-
-      // Adicionar event listeners para botões de edição e exclusão
-      document.querySelectorAll(".edit-content").forEach((button) => {
-        button.addEventListener("click", () => {
-          editContent(button.getAttribute("data-id"))
-        })
-      })
-
-      document.querySelectorAll(".delete-content").forEach((button) => {
-        button.addEventListener("click", () => {
-          deleteContent(button.getAttribute("data-id"))
-        })
-      })
+      showToast("Erro ao salvar conteúdo.", true)
     }
   }
 
-  function filterContentItems(items) {
-    const filterType = document.querySelector('input[name="content-filter"]:checked')?.value || "all"
-    const searchTerm = searchContent?.value.toLowerCase() || ""
+  function editContent(id) {
+    if (!window.blogData) return
 
-    return items.filter((item) => {
-      // Filtrar por tipo
-      if (filterType !== "all" && item.type !== filterType) {
-        return false
-      }
-
-      // Filtrar por termo de busca
-      if (searchTerm) {
-        return (
-          item.title.toLowerCase().includes(searchTerm) ||
-          item.summary.toLowerCase().includes(searchTerm) ||
-          (item.author && item.author.toLowerCase().includes(searchTerm)) ||
-          item.category.toLowerCase().includes(searchTerm)
-        )
-      }
-
-      return true
-    })
-  }
-
-  function filterContent() {
-    loadContent()
-  }
-
-  function showPreview() {
-    const contentType = document.querySelector('input[name="content-type"]:checked').value
-    const title = document.getElementById("content-title").value
-    const author = document.getElementById("content-author")?.value || ""
-    const category = document.getElementById("content-category").value
-    const icon = document.getElementById("content-icon").value
-    const body = document.getElementById("content-body").value
-
-    // Criar HTML de pré-visualização
-    const previewHTML = `
-      <div class="preview-content">
-        <h1>${title}</h1>
-        <div class="article-meta">
-          <span><i class="fas fa-calendar-alt"></i> ${formatDate(new Date().toISOString())}</span>
-          ${contentType === "article" ? `<span><i class="fas fa-user"></i> ${author}</span>` : ""}
-          <span><i class="fas fa-tag"></i> ${category}</span>
-        </div>
-        
-        <div class="article-featured-image">
-          <i class="fas ${icon} featured-icon"></i>
-        </div>
-        
-        <div class="article-content">
-          ${formatContentForPreview(body)}
-        </div>
-      </div>
-    `
-
-    previewContent.innerHTML = previewHTML
-    previewModal.classList.remove("hidden")
-  }
-
-  function formatContentForPreview(content) {
-    // Converter quebras de linha em parágrafos
-    let formatted = content.replace(/\n\n/g, "</p><p>")
-    formatted = "<p>" + formatted + "</p>"
-
-    // Substituir marcações simples
-    formatted = formatted.replace(/## (.*?)(\n|$)/g, "<h2>$1</h2>")
-    formatted = formatted.replace(/### (.*?)(\n|$)/g, "<h3>$1</h3>")
-    formatted = formatted.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-    formatted = formatted.replace(/\*(.*?)\*/g, "<em>$1</em>")
-
-    // Substituir caixas de informação
-    const infoBoxRegex = /\[info\]([\s\S]*?)\[\/info\]/g
-    formatted = formatted.replace(
-      infoBoxRegex,
-      '<div class="info-box green"><h3 class="info-title"><i class="fas fa-info-circle"></i> Informação</h3><p>$1</p></div>',
-    )
-
-    return formatted
-  }
-
-  function formatContentForStorage(content) {
-    // Em um sistema real, você pode querer fazer algum processamento adicional aqui
-    return content
-  }
-
-  function formatText(format) {
-    const editor = document.getElementById("content-body")
-    const selection = editor.value.substring(editor.selectionStart, editor.selectionEnd)
-    let formattedText = ""
-
-    switch (format) {
-      case "h2":
-        formattedText = `\n## ${selection || "Título de Seção"}\n\n`
-        break
-      case "h3":
-        formattedText = `\n### ${selection || "Subtítulo"}\n\n`
-        break
-      case "p":
-        formattedText = `\n${selection || "Novo parágrafo"}\n\n`
-        break
-      case "bold":
-        formattedText = `**${selection || "texto em negrito"}**`
-        break
-      case "italic":
-        formattedText = `*${selection || "texto em itálico"}*`
-        break
-      case "ul":
-        if (selection) {
-          const lines = selection.split("\n")
-          formattedText = "\n"
-          lines.forEach((line) => {
-            if (line.trim()) {
-              formattedText += `- ${line.trim()}\n`
-            }
-          })
-          formattedText += "\n"
-        } else {
-          formattedText = "\n- Item da lista\n- Item da lista\n- Item da lista\n\n"
-        }
-        break
-      case "ol":
-        if (selection) {
-          const lines = selection.split("\n")
-          formattedText = "\n"
-          lines.forEach((line, index) => {
-            if (line.trim()) {
-              formattedText += `${index + 1}. ${line.trim()}\n`
-            }
-          })
-          formattedText += "\n"
-        } else {
-          formattedText = "\n1. Primeiro item\n2. Segundo item\n3. Terceiro item\n\n"
-        }
-        break
-      case "info-box":
-        formattedText = `\n[info]${selection || "Informação importante aqui"}[/info]\n\n`
-        break
-    }
-
-    // Inserir texto formatado
-    const start = editor.selectionStart
-    const end = editor.selectionEnd
-    editor.value = editor.value.substring(0, start) + formattedText + editor.value.substring(end)
-
-    // Reposicionar cursor
-    editor.focus()
-    editor.selectionStart = start + formattedText.length
-    editor.selectionEnd = start + formattedText.length
-  }
-
-  function showConfirmation(message, onConfirm) {
-    confirmMessage.textContent = message
-    confirmationModal.classList.remove("hidden")
-
-    // Remover event listeners anteriores
-    confirmYes.replaceWith(confirmYes.cloneNode(true))
-    confirmNo.replaceWith(confirmNo.cloneNode(true))
-
-    // Adicionar novos event listeners
-    document.getElementById("confirm-yes").addEventListener("click", () => {
-      onConfirm()
-      confirmationModal.classList.add("hidden")
-    })
-
-    document.getElementById("confirm-no").addEventListener("click", () => {
-      confirmationModal.classList.add("hidden")
-    })
-  }
-
-  function editContent(contentId) {
-    // Obter o conteúdo pelo ID
-    const content = window.blogData.getContentById(contentId)
+    const content = window.blogData.getContentById(id)
     if (!content) return
 
-    // Alternar para a aba de novo conteúdo
-    document.querySelector('[data-tab="new-content"]').click()
+    // Mudar para a aba de criação
+    document.querySelector('.admin-tab-btn[data-tab="create"]').click()
 
-    // Selecionar o tipo de conteúdo
-    const contentTypeRadio = document.querySelector(`input[name="content-type"][value="${content.type}"]`)
-    if (contentTypeRadio) {
-      contentTypeRadio.checked = true
-      toggleContentFields()
-    }
-
-    // Preencher o
-
+    // Preencher formulário
+    contentTypeSelect.value = content.type
     document.getElementById("content-title").value = content.title
-    document.getElementById("content-category").value = content.category
-    document.getElementById("content-icon").value = content.icon
     document.getElementById("content-summary").value = content.summary
-    document.getElementById("content-body").value = content.content
+    document.getElementById("content-category").value = content.category || "Reciclagem"
+    contentIconInput.value = content.icon || "fa-recycle"
+    selectedIconPreview.className = `fas ${content.icon || "fa-recycle"}`
 
+    // Preencher editor
+    quill.root.innerHTML = content.content || ""
+
+    // Mostrar/esconder campos de artigo
+    toggleArticleFields()
+
+    // Preencher campos específicos de artigo
     if (content.type === "article") {
-      document.getElementById("content-author").value = content.author
-      document.getElementById("content-tags").value = content.tags.join(", ")
+      document.getElementById("content-author").value = content.author || ""
+      document.getElementById("content-tags").value = content.tags ? content.tags.join(", ") : ""
+    }
+
+    // Adicionar ID para atualização
+    contentForm.setAttribute("data-edit-id", id)
+
+    // Mudar texto do botão
+    document.querySelector('#content-form button[type="submit"]').textContent = "Atualizar"
+  }
+
+  function viewContent(id) {
+    if (!window.blogData) return
+
+    const content = window.blogData.getContentById(id)
+    if (!content) return
+
+    // Abrir em uma nova aba
+    window.open(`content-view.html?id=${id}`, "_blank")
+  }
+
+  function deleteContent(id) {
+    if (!window.blogData) return
+
+    const content = window.blogData.getContentById(id)
+    if (!content) return
+
+    showConfirmationModal(
+      "Confirmar Exclusão",
+      `Tem certeza que deseja excluir "${content.title}"? Esta ação não pode ser desfeita.`,
+      () => {
+        window.blogData.removeContent(id)
+        loadContent(contentFilter.value, contentSearch.value)
+        showToast("Conteúdo excluído com sucesso!")
+      },
+    )
+  }
+
+  function resetForm() {
+    contentForm.reset()
+    quill.root.innerHTML = ""
+    contentForm.removeAttribute("data-edit-id")
+    document.querySelector('#content-form button[type="submit"]').textContent = "Salvar"
+    contentIconInput.value = "fa-recycle"
+    selectedIconPreview.className = "fas fa-recycle"
+    contentPreview.classList.add("hidden")
+    previewBtn.innerHTML = '<i class="fas fa-eye"></i> Visualizar'
+
+    // Esconder campos de artigo
+    articleFields.classList.add("hidden")
+  }
+
+  function togglePreview() {
+    if (contentPreview.classList.contains("hidden")) {
+      // Mostrar preview
+      const content = quill.root.innerHTML
+      contentPreview.innerHTML = content
+      contentPreview.classList.remove("hidden")
+      previewBtn.innerHTML = '<i class="fas fa-edit"></i> Editar'
+    } else {
+      // Esconder preview
+      contentPreview.classList.add("hidden")
+      previewBtn.innerHTML = '<i class="fas fa-eye"></i> Visualizar'
     }
   }
 
-  function deleteContent(contentId) {
-    showConfirmation("Tem certeza que deseja excluir este conteúdo?", () => {
-      window.blogData.deleteContent(contentId)
-      loadContent()
+  function toggleIconGrid() {
+    iconGrid.classList.toggle("hidden")
+  }
+
+  function selectIcon() {
+    const icon = this.getAttribute("data-icon")
+    contentIconInput.value = icon
+    selectedIconPreview.className = `fas ${icon}`
+
+    // Atualizar seleção visual
+    iconItems.forEach((item) => item.classList.remove("selected"))
+    this.classList.add("selected")
+
+    // Fechar grid
+    iconGrid.classList.add("hidden")
+  }
+
+  function showConfirmationModal(title, message, confirmCallback) {
+    modalTitle.textContent = title
+    modalMessage.textContent = message
+
+    // Remover event listeners anteriores
+    const newModalConfirm = modalConfirm.cloneNode(true)
+    modalConfirm.parentNode.replaceChild(newModalConfirm, modalConfirm)
+    const modalConfirm = newModalConfirm
+
+    // Adicionar novo event listener
+    modalConfirm.addEventListener("click", () => {
+      confirmCallback()
+      closeConfirmationModal()
     })
+
+    // Mostrar modal
+    confirmationModal.classList.remove("hidden")
   }
 
-  function generateSlug(title) {
-    return title
-      .toLowerCase()
-      .replace(/ /g, "-")
-      .replace(/[^\w-]+/g, "")
+  function closeConfirmationModal() {
+    confirmationModal.classList.add("hidden")
   }
 
-  function formatDate(dateString) {
-    const date = new Date(dateString)
-    const day = String(date.getDate()).padStart(2, "0")
-    const month = String(date.getMonth() + 1).padStart(2, "0") // Janeiro é 0!
-    const year = date.getFullYear()
+  function showToast(message, isError = false) {
+    toastContent.textContent = message
+    toast.classList.remove("hidden", "error")
 
-    return `${day}/${month}/${year}`
+    if (isError) {
+      toast.classList.add("error")
+    }
+
+    // Esconder após 3 segundos
+    setTimeout(() => {
+      toast.classList.add("hidden")
+    }, 3000)
   }
 })

@@ -1,985 +1,292 @@
-/* Blog Article Styles */
-.article-container {
-  padding-top: 100px;
-  padding-bottom: 50px;
-  max-width: 900px;
+/* Estilos específicos para a página do blog */
+
+/* Ajuste para o header fixo */
+.main-content {
+  padding-top: var(--spacing-8);
 }
 
-.blog-article {
-  background-color: var(--color-bg);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-}
-
-.article-header {
-  padding: var(--spacing-8) var(--spacing-8) var(--spacing-4);
-  text-align: center;
-}
-
-.article-header h1 {
-  font-size: 2.5rem;
-  margin-bottom: var(--spacing-4);
-}
-
-.article-meta {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: var(--spacing-4);
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-}
-
-.article-meta span {
-  display: flex;
-  align-items: center;
-}
-
-.article-meta i {
-  margin-right: var(--spacing-2);
-}
-
-.article-featured-image {
-  background: linear-gradient(to right, var(--color-green-500), var(--color-blue-500));
-  height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.dark .article-featured-image {
-  background: linear-gradient(to right, #054b1f, #012485);
-}
-
-.featured-icon {
-  font-size: 5rem;
-  color: var(--color-white);
-}
-
-.article-content {
-  padding: var(--spacing-8);
-}
-
-.article-content h2 {
-  font-size: 1.8rem;
-  margin-top: var(--spacing-8);
-  margin-bottom: var(--spacing-4);
-  color: var(--color-green-700);
-}
-
-.dark .article-content h2 {
-  color: var(--color-green-400);
-}
-
-.article-content h3 {
-  font-size: 1.4rem;
-  margin-top: var(--spacing-6);
-  margin-bottom: var(--spacing-3);
-  color: var(--color-green-600);
-}
-
-.dark .article-content h3 {
-  color: var(--color-green-300);
-}
-
-.article-content p {
-  margin-bottom: var(--spacing-4);
-  line-height: 1.7;
-}
-
-.article-content ul,
-.article-content ol {
-  margin-bottom: var(--spacing-6);
-  padding-left: var(--spacing-6);
-}
-
-.article-content li {
-  margin-bottom: var(--spacing-2);
-  line-height: 1.7;
-}
-
-.article-image {
-  margin: var(--spacing-6) 0;
-  text-align: center;
-}
-
-.article-image img {
-  max-width: 100%;
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-md);
-}
-
-.image-caption {
-  margin-top: var(--spacing-2);
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-  text-align: center;
-}
-
-.benefits-list {
-  list-style-type: none;
-  padding-left: 0;
-}
-
-.benefits-list li {
-  padding-left: var(--spacing-6);
-  position: relative;
-  margin-bottom: var(--spacing-4);
-}
-
-.benefits-list li::before {
-  content: "\f058";
-  font-family: "Font Awesome 5 Free";
-  font-weight: 900;
-  color: var(--color-green-500);
-  position: absolute;
-  left: 0;
-}
-
-.dark .benefits-list li::before {
-  color: var(--color-green-400);
-}
-
-.problems-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: var(--spacing-6) 0;
-}
-
-.problems-table th {
-  background-color: var(--color-green-100);
-  color: var(--color-green-800);
-  padding: var(--spacing-3);
-  text-align: left;
-}
-
-.dark .problems-table th {
-  background-color: var(--color-green-800);
-  color: var(--color-green-100);
-}
-
-.problems-table td {
-  padding: var(--spacing-3);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.article-cta {
-  background-color: var(--color-green-50);
-  padding: var(--spacing-6);
-  border-radius: var(--border-radius-lg);
-  margin-top: var(--spacing-8);
-  text-align: center;
-}
-
-.dark .article-cta {
-  background-color: rgba(22, 101, 52, 0.2);
-}
-
-.article-cta h3 {
-  margin-top: 0;
-}
-
-.article-footer {
-  padding: var(--spacing-6) var(--spacing-8);
-  border-top: 1px solid var(--color-border);
+/* Blog header e filtros */
+.blog-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: var(--spacing-6);
   flex-wrap: wrap;
   gap: var(--spacing-4);
 }
 
-.article-tags {
+.blog-search {
+  max-width: 300px;
+  width: 100%;
+}
+
+.search-input {
+  position: relative;
+  width: 100%;
+}
+
+.search-input input {
+  width: 100%;
+  padding: var(--spacing-2) var(--spacing-2) var(--spacing-2) var(--spacing-8);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background-color: var(--color-input-bg);
+  transition: var(--transition-base);
+}
+
+.search-input i {
+  position: absolute;
+  left: var(--spacing-3);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+}
+
+.search-input input:focus {
+  outline: none;
+  border-color: var(--color-green-500);
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+}
+
+/* Estilos para os filtros do blog */
+.blog-tabs {
   display: flex;
-  flex-wrap: wrap;
   gap: var(--spacing-2);
 }
 
-.article-share {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-3);
-}
-
-.share-link {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: var(--color-gray-200);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.blog-tab-btn {
+  padding: var(--spacing-2) var(--spacing-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background-color: var(--color-gray-100);
+  cursor: pointer;
   transition: var(--transition-base);
 }
 
-.dark .share-link {
+.dark .blog-tab-btn {
   background-color: var(--color-gray-700);
+  border-color: var(--color-gray-600);
 }
 
-.share-link:hover {
-  background-color: var(--color-green-500);
-  color: var(--color-white);
+.blog-tab-btn.active {
+  background-color: var(--color-green-100);
+  color: var(--color-green-800);
+  border-color: var(--color-green-300);
 }
 
-.related-articles {
-  padding: var(--spacing-6) var(--spacing-8);
+.dark .blog-tab-btn.active {
+  background-color: var(--color-green-800);
+  color: var(--color-green-100);
+  border-color: var(--color-green-600);
+}
+
+/* Mensagem vazia */
+.empty-message {
+  padding: var(--spacing-8);
+  text-align: center;
   background-color: var(--color-gray-50);
+  border-radius: var(--border-radius-lg);
+  color: var(--color-text-muted);
 }
 
-.dark .related-articles {
+.dark .empty-message {
   background-color: var(--color-gray-800);
 }
 
-.related-articles h3 {
-  margin-bottom: var(--spacing-6);
-  text-align: center;
+/* Estilos para os comunicados */
+.announcements-container {
+  margin-bottom: var(--spacing-8);
 }
 
-.related-grid {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
+.announcements-list {
+  display: flex;
+  flex-direction: column;
   gap: var(--spacing-4);
 }
 
-.related-article {
+.announcement-item {
   display: flex;
-  align-items: center;
   gap: var(--spacing-4);
   padding: var(--spacing-4);
-  background-color: var(--color-white);
-  border-radius: var(--border-radius);
-  transition: var(--transition-base);
+  background-color: var(--color-blue-50);
+  border-radius: var(--border-radius-lg);
+  border-left: 4px solid var(--color-blue-500);
 }
 
-.dark .related-article {
-  background-color: var(--color-gray-700);
+.dark .announcement-item {
+  background-color: rgba(30, 64, 175, 0.2);
+  border-left-color: var(--color-blue-500);
 }
 
-.related-article:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
-}
-
-.related-image {
+.announcement-icon {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: var(--color-green-100);
+  background-color: var(--color-blue-100);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
 
-.dark .related-image {
-  background-color: var(--color-green-800);
+.dark .announcement-icon {
+  background-color: var(--color-blue-800);
 }
 
-.related-image i {
+.announcement-icon i {
+  font-size: 1.5rem;
+  color: var(--color-blue-600);
+}
 
+.dark .announcement-icon i {
+  color: var(--color-blue-300);
+}
 
-Agora, vamos atualizar a página inicial para exibir os artigos e comunicados dinamicamente:
+.announcement-content {
+  flex: 1;
+}
 
-```html file="index.html"
-&lt;!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#16a34a" />
-  <meta name="description" content="ASCAMAREA - Associação de Catadores de Materiais Recicláveis" />
-  <title>ASCAMAREA - Associação de Catadores de Materiais Recicláveis</title>
-  <link href="./imgs/logo.png" rel="icon" type="image/png"/>
-  
-  &lt;!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <header class="site-header">
-    <div class="container header-container">
-      <div class="logo">
-        <i class="fas fa-recycle"></i>
-        <h1>ASCAMAREA</h1>
-      </div>
-      <nav class="main-nav">
-        <a href="#sobre" class="nav-link">Sobre</a>
-        <a href="#mapa" class="nav-link">Mapa</a>
-        <a href="#calendario" class="nav-link">Calendário</a>
-        <a href="#blog" class="nav-link">Blog</a>
-      </nav>
+.announcement-content h4 {
+  margin-top: 0;
+  margin-bottom: var(--spacing-2);
+}
 
-      <div class="header-actions">
-        <div class="theme-toggle">
-          <i class="fas fa-sun"></i>
-          <label class="switch">
-            <input type="checkbox" id="darkModeToggle">
-            <span class="slider round"></span>
-          </label>
-          <i class="fas fa-moon"></i>
-        </div>
-      </div>
-      <button id="mobileMenuButton" class="mobile-menu-button">
-        <i class="fas fa-bars"></i>
-      </button>
-    </div>
-    <div id="mobileMenu" class="mobile-menu hidden">
-      <nav class="mobile-nav">
-        <a href="#sobre" class="nav-link">Sobre</a>
-        <a href="#mapa" class="nav-link">Mapa</a>
-        <a href="#calendario" class="nav-link">Calendário</a>
-        <a href="#blog" class="nav-link">Blog</a>
-      </nav>
-    </div>
-  </header>
+.announcement-meta {
+  display: flex;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
 
-  
-  <section class="hero">
-    <div class="container text-center">
-      <h2>Transformando Resíduos em Recursos</h2>
-      <p>
-        Junte-se à ASCAMAREA na missão de promover a reciclagem e apoiar os catadores de materiais recicláveis.
-      </p>
-      <div class="button-group">
-        <button class="btn btn-light">Agendar Coleta</button>
-        <button class="btn btn-outline-light">Saiba Mais</button>
-      </div>
-    </div>
-  </section>
+.announcement-meta span {
+  display: flex;
+  align-items: center;
+}
 
+.announcement-meta i {
+  margin-right: var(--spacing-1);
+}
 
-  <main class="container main-content">
-    <div class="tabs">
-      <div class="tabs-list">
-        <button class="tab-btn active" data-tab="informacoes" id="sobre">
-          <i class="fas fa-info-circle" id="bottons" ></i>
-          <span>Informações</span>
-        </button>
-        <button class="tab-btn" data-tab="mapa" id="mapa">
-          <i class="fas fa-map-marker-alt"></i>
-          <span>Mapa</span>
-        </button>
-        <button class="tab-btn" data-tab="calendario" id="calendario">
-          <i class="fas fa-calendar-alt"></i>
-          <span>Calendário</span>
-        </button>
-        <button class="tab-btn" data-tab="blog" id="blog">
-          <i class="fas fa-newspaper"></i>
-          <span>Blog</span>
-        </button>
-        <button class="tab-btn" data-tab="gamificacao">
-          <i class="fas fa-trophy"></i>
-          <span>Gamificação</span>
-        </button>
-        <button class="tab-btn" data-tab="precos">
-          <i class="fas fa-tag"></i>
-          <span>Preços</span>
-        </button>
-      </div>
+.announcement-content p {
+  margin-bottom: var(--spacing-3);
+}
 
-      &lt;!-- Informações Tab -->
-      <div class="tab-content" id="informacoes-tab">
-        <div class="info-grid">
-          <div class="info-content">
-            <h2>Sobre a ASCAMAREA</h2>
-            <p>
-              A ASCAMAREA é uma associação de catadores de materiais recicláveis que trabalha para promover a
-              reciclagem e melhorar as condições de trabalho dos catadores.
-            </p>
-            <p>
-              Nossa missão é transformar resíduos em recursos, contribuindo para um meio ambiente mais limpo e
-              sustentável, enquanto geramos renda e dignidade para os catadores.
-            </p>
-            <h3>Nossos Valores</h3>
-            <ul class="values-list">
-              <li>Sustentabilidade ambiental</li>
-              <li>Inclusão social</li>
-              <li>Economia circular</li>
-              <li>Trabalho digno</li>
-              <li>Educação ambiental</li>
-            </ul>
-          </div>
-          <div class="impact-box">
-            <h3>Impacto da Reciclagem</h3>
-            <div class="impact-stats">
-              <div class="impact-stat">
-                <div class="stat-circle green">
-                  <span>75%</span>
-                </div>
-                <div>
-                  <h4>Redução de Resíduos</h4>
-                  <p>Diminuição de materiais enviados para aterros sanitários</p>
-                </div>
-              </div>
-              <div class="impact-stat">
-                <div class="stat-circle blue">
-                  <span>60%</span>
-                </div>
-                <div>
-                  <h4>Economia de Energia</h4>
-                  <p>Comparado à produção com matérias-primas virgens</p>
-                </div>
-              </div>
-              <div class="impact-stat">
-                <div class="stat-circle amber">
-                  <span>100+</span>
-                </div>
-                <div>
-                  <h4>Famílias Beneficiadas</h4>
-                  <p>Catadores e suas famílias com renda melhorada</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+/* Estilos para os posts do blog */
+.blog-posts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-6);
+}
 
-      &lt;!-- Mapa Tab -->
-      <div class="tab-content hidden" id="mapa-tab">
-        <div class="card">
-          <div class="card-header">
-            <h3>Mapa de Coleta - Açailândia</h3>
-            <p class="text-muted">
-              Confira os pontos de coleta e rotas dos catadores em Açailândia
-            </p>
-          </div>
-          <div class="card-body">
-            <div class="mb-medium">
-              <p class="mb-small text-muted">
-                Nossos catadores percorrem diversas rotas pela cidade de Açailândia. Confira no mapa abaixo os principais pontos de coleta e as áreas atendidas.
-              </p>
-              
-              <div class="legend-box mb-medium">
-                <h4 class="legend-title">
-                  <i class="fas fa-info-circle text-blue"></i>
-                  Legenda
-                </h4>
-                <div class="legend-grid">
-                  <div class="legend-item">
-                    <div class="legend-dot green"></div>
-                    <span>Pontos de coleta</span>
-                  </div>
-                  <div class="legend-item">
-                    <div class="legend-dot blue"></div>
-                    <span>Sede ASCAMAREA</span>
-                  </div>
-                  <div class="legend-item">
-                    <div class="legend-dot red"></div>
-                    <span>Ecopontos</span>
-                  </div>
-                  <div class="legend-item">
-                    <div class="legend-dot yellow"></div>
-                    <span>Parceiros</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div class="map-container">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63573.04707076489!2d-47.51676799999999!3d-4.9470209!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92d0aa0a8aad7f91%3A0x8e7a8ccf4d7d1e43!2sA%C3%A7ail%C3%A2ndia%2C%20MA!5e0!3m2!1spt-BR!2sbr!4v1711743600000!5m2!1spt-BR!2sbr!4v1711743600000!5m2!1spt-BR!2sbr" 
-                width="100%" 
-                height="100%" 
-                style="border:0;" 
-                allowfullscreen="" 
-                loading="lazy" 
-                referrerpolicy="no-referrer-when-downgrade"
-                class="map-iframe">
-              </iframe>
-            </div>
-            
-            <div class="action-grid">
-              <div class="action-card">
-                <h4>Solicitar Coleta</h4>
-                <p>Precisa de coleta em seu endereço? Preencha o formulário para agendar.</p>
-                <button class="btn btn-green btn-full">
-                  Solicitar Coleta
-                </button>
-              </div>
-              
-              <div class="action-card">
-                <h4>Tornar-se um Ponto de Coleta</h4>
-                <p>Sua empresa ou residência pode se tornar um ponto de coleta oficial.</p>
-                <button class="btn btn-blue btn-full">
-                  Cadastrar Ponto
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+@media (min-width: 768px) {
+  .blog-posts-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
-      &lt;!-- Calendário Tab -->
-      <div class="tab-content hidden" id="calendario-tab">
-        <div class="card">
-          <div class="card-header">
-            <h3>Calendário de Coleta</h3>
-            <p class="text-muted">
-              Confira os dias e horários de coleta em cada bairro
-            </p>
-          </div>
-          <div class="card-body">
-            <div class="calendar-grid mb-medium">
-              <div>
-                <p class="mb-small text-muted">
-                  Nosso calendário de coleta é organizado por bairros e tipos de materiais. Verifique abaixo os dias em que passamos pelo seu bairro.
-                </p>
-                
-                <div class="legend-box mb-medium">
-                  <h4 class="legend-title">Legenda</h4>
-                  <div class="legend-grid">
-                    <div class="legend-item">
-                      <div class="legend-square green"></div>
-                      <span>Papel/Papelão</span>
-                    </div>
-                    <div class="legend-item">
-                      <div class="legend-square red"></div>
-                      <span>Plásticos</span>
-                    </div>
-                    <div class="legend-item">
-                      <div class="legend-square blue"></div>
-                      <span>Vidros</span>
-                    </div>
-                    <div class="legend-item">
-                      <div class="legend-square yellow"></div>
-                      <span>Metais</span>
-                    </div>
-                    <div class="legend-item">
-                      <div class="legend-square purple"></div>
-                      <span>Eletrônicos</span>
-                    </div>
-                    <div class="legend-item">
-                      <div class="legend-square gray"></div>
-                      <span>Coleta Geral</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div>
-                <div class="calendar-nav">
-                  <button id="prev-month" class="btn-icon">
-                    <i class="fas fa-chevron-left"></i>
-                  </button>
-                  <h4 id="current-month">Julho 2023</h4>
-                  <button id="next-month" class="btn-icon">
-                    <i class="fas fa-chevron-right"></i>
-                  </button>
-                </div>
-                
-                <div class="calendar-container">
-                  <div class="calendar-header">
-                    <div>Dom</div>
-                    <div>Seg</div>
-                    <div>Ter</div>
-                    <div>Qua</div>
-                    <div>Qui</div>
-                    <div>Sex</div>
-                    <div>Sáb</div>
-                  </div>
-                  <div id="calendar-days" class="calendar-days">
-                    &lt;!-- Calendar days will be generated by JavaScript -->
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div>
-              <h4 class="section-title">Programação por Bairro</h4>
-              
-              <div class="table-responsive">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>Bairro</th>
-                      <th>Segunda</th>
-                      <th>Terça</th>
-                      <th>Quarta</th>
-                      <th>Quinta</th>
-                      <th>Sexta</th>
-                      <th>Sábado</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td class="font-medium">Centro</td>
-                      <td><div class="collection-marker green"></div></td>
-                      <td><div class="collection-marker red"></div></td>
-                      <td><div class="collection-marker blue"></div></td>
-                      <td><div class="collection-marker yellow"></div></td>
-                      <td><div class="collection-marker purple"></div></td>
-                      <td><div class="collection-marker gray"></div></td>
-                    </tr>
-                    <tr>
-                      <td class="font-medium">Jardim América</td>
-                      <td></td>
-                      <td><div class="collection-marker green"></div></td>
-                      <td></td>
-                      <td><div class="collection-marker red"></div></td>
-                      <td></td>
-                      <td><div class="collection-marker gray"></div></td>
-                    </tr>
-                    <tr>
-                      <td class="font-medium">Vila Ildemar</td>
-                      <td><div class="collection-marker red"></div></td>
-                      <td></td>
-                      <td><div class="collection-marker yellow"></div></td>
-                      <td></td>
-                      <td><div class="collection-marker green"></div></td>
-                      <td></td>
-                    </tr>
-                    <tr>
-                      <td class="font-medium">Parque São José</td>
-                      <td></td>
-                      <td><div class="collection-marker blue"></div></td>
-                      <td></td>
-                      <td><div class="collection-marker green"></div></td>
-                      <td></td>
-                      <td><div class="collection-marker gray"></div></td>
-                    </tr>
-                    <tr>
-                      <td class="font-medium">Jacu</td>
-                      <td><div class="collection-marker yellow"></div></td>
-                      <td></td>
-                      <td><div class="collection-marker purple"></div></td>
-                      <td></td>
-                      <td><div class="collection-marker red"></div></td>
-                      <td></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              
-              <div class="info-box green">
-                <h4 class="info-title">
-                  <i class="fas fa-info-circle"></i>
-                  Informações Importantes
-                </h4>
-                <ul class="info-list">
-                  <li>Coloque os materiais para coleta até as 8h da manhã do dia programado.</li>
-                  <li>Separe corretamente os materiais por tipo para facilitar a coleta.</li>
-                  <li>Em caso de chuva forte, a coleta pode ser adiada para o próximo dia útil.</li>
-                  <li>Para coletas especiais ou grandes volumes, entre em contato conosco.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+@media (min-width: 1024px) {
+  .blog-posts-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
 
-      &lt;!-- Blog Tab -->
-      <div class="tab-content hidden" id="blog-tab">
-        <div class="card">
-          <div class="card-body">
-            <div class="blog-header">
-              <h3 class="section-title-lg">Blog Ambiental</h3>
-              <div class="blog-tabs">
-                <button class="blog-tab-btn active" data-content-type="all">Todos</button>
-                <button class="blog-tab-btn" data-content-type="article">Artigos</button>
-                <button class="blog-tab-btn" data-content-type="announcement">Comunicados</button>
-              </div>
-            </div>
-            
-            <p class="mb-medium">Artigos e informações sobre reciclagem, compostagem e outros temas ambientais baseados em evidências científicas.</p>
-            
-            &lt;!-- Comunicados (Avisos) -->
-            <div id="announcements-container" class="announcements-container mb-medium">
-              &lt;!-- Comunicados serão carregados dinamicamente aqui -->
-            </div>
-            
-            &lt;!-- Artigos do Blog -->
-            <div id="blog-posts-container" class="blog-posts-grid">
-              &lt;!-- Artigos serão carregados dinamicamente aqui -->
-            </div>
-            
-            <div class="info-box green">
-              <h4 class="info-title">
-                <i class="fas fa-info-circle"></i>
-                Sobre nosso blog
-              </h4>
-              <p>Todos os artigos são escritos por especialistas e baseados em evidências científicas. O conteúdo é atualizado regularmente para refletir as mais recentes pesquisas e práticas na área ambiental.</p>
-              <p>Nosso objetivo é compartilhar conhecimento e promover práticas sustentáveis acessíveis a todos.</p>
-            </div>
-          </div>
-        </div>
-      </div>
+.blog-post {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-card-bg);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: var(--transition-base);
+  height: 100%;
+}
 
-      &lt;!-- Gamificação Tab -->
-      <div class="tab-content hidden" id="gamificacao-tab">
-        <div class="card">
-          <div class="card-body">
-            <h3 class="section-title-lg">Desafio de Reciclagem</h3>
-            <p class="mb-small">Teste seus conhecimentos sobre reciclagem e ganhe pontos!</p>
-            
-            <div id="recycling-game" class="game-container">
-              <div class="game-content">
-                <div class="game-header">
-                  <div>
-                    <h4>Eco Quiz</h4>
-                    <p class="text-muted small">Responda corretamente e ganhe pontos</p>
-                  </div>
-                  <div class="score-display">
-                    <span class="font-bold">Pontos: </span> 
-                    <span id="game-score" class="text-green font-bold">0</span>
-                  </div>
-                </div>
-                
-                <div id="game-container" class="game-content-area">
-                  &lt;!-- Tela inicial -->
-                  <div id="game-start-screen" class="game-screen text-center">
-                    <div class="game-intro">
-                      <i class="fas fa-recycle text-green game-icon"></i>
-                      <h3>Desafio de Reciclagem</h3>
-                      <p>Teste seus conhecimentos sobre reciclagem e sustentabilidade!</p>
-                    </div>
-                    
-                    <div class="game-features">
-                      <div class="feature-icons">
-                        <div class="feature-icon">
-                          <div class="feature-circle green">
-                            <i class="fas fa-question text-green"></i>
-                          </div>
-                          <p class="feature-text">10 perguntas</p>
-                        </div>
-                        <div class="feature-icon">
-                          <div class="feature-circle blue">
-                            <i class="fas fa-clock text-blue"></i>
-                          </div>
-                          <p class="feature-text">Contra o tempo</p>
-                        </div>
-                        <div class="feature-icon">
-                          <div class="feature-circle yellow">
-                            <i class="fas fa-trophy text-yellow"></i>
-                          </div>
-                          <p class="feature-text">Ganhe prêmios</p>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <button id="game-start" class="btn btn-green btn-lg">
-                      Iniciar Desafio
-                    </button>
-                  </div>
-                  
-                  &lt;!-- Tela de jogo (inicialmente oculta) -->
-                  <div id="game-question-screen" class="game-screen hidden">
-                    <div class="question-header">
-                      <div class="question-counter">
-                        Pergunta <span id="current-question">1</span> de <span id="total-questions">10</span>
-                      </div>
-                      <div class="time-bar-container">
-                        <div id="time-bar" class="time-bar"></div>
-                      </div>
-                    </div>
-                    
-                    <div class="question-box">
-                      <h4 id="question-text">Qual destes materiais NÃO é reciclável?</h4>
-                      <div id="question-image-container" class="question-image hidden">
-                        <img id="question-image" src="/placeholder.svg" alt="Imagem da pergunta">
-                      </div>
-                    </div>
-                    
-                    <div id="answers-container" class="answers-grid">
-                      &lt;!-- As opções serão geradas pelo JavaScript -->
-                    </div>
-                  </div>
-                  
-                  &lt;!-- Tela de resultado (inicialmente oculta) -->
-                  <div id="game-result-screen" class="game-screen hidden text-center">
-                    <div class="result-header">
-                      <i id="result-icon" class="fas fa-award text-yellow result-icon"></i>
-                      <h3>Parabéns!</h3>
-                      <p>Você completou o desafio de reciclagem!</p>
-                      <p class="result-score">Sua pontuação: <span id="final-score" class="text-green font-bold">0</span> pontos</p>
-                    </div>
-                    
-                    <div class="result-stats">
-                      <h4>Seu desempenho</h4>
-                      <div class="stats-display">
-                        <div class="stat-item">
-                          <div id="correct-answers" class="stat-number text-green">0</div>
-                          <p class="stat-label">Acertos</p>
-                        </div>
-                        <div class="stat-item">
-                          <div id="wrong-answers" class="stat-number text-red">0</div>
-                          <p class="stat-label">Erros</p>
-                        </div>
-                        <div class="stat-item">
-                          <div id="time-taken" class="stat-number text-blue">0s</div>
-                          <p class="stat-label">Tempo</p>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div class="result-actions">
-                      <button id="game-restart" class="btn btn-green">
-                        Jogar Novamente
-                      </button>
-                      <button id="share-results" class="btn btn-outline-green">
-                        Compartilhar
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div class="info-box green">
-              <h4 class="info-title">Sobre o Desafio</h4>
-              <p>Este desafio foi criado para testar e aumentar seus conhecimentos sobre reciclagem e sustentabilidade de forma divertida.</p>
-              <p>Ao completar o desafio com uma pontuação alta, você pode ganhar cupons de desconto em nossos parceiros e outros benefícios!</p>
-            </div>
-          </div>
-        </div>
-      </div>
+.blog-post:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
 
-      &lt;!-- Preços Tab -->
-      <div class="tab-content hidden" id="precos-tab">
-        <div class="card">
-          <div class="card-header">
-            <h3>Valores dos Materiais Recicláveis</h3>
-            <p class="text-muted">
-              Confira os preços atuais pagos por kg de material reciclável
-            </p>
-          </div>
-          <div class="card-body">
-            <p class="mb-medium text-muted">
-              Os valores são atualizados mensalmente e podem variar de acordo com a qualidade do material e
-              condições de mercado. Materiais limpos, secos e separados corretamente têm maior valor.
-            </p>
+.blog-post-image {
+  height: 180px;
+  background: linear-gradient(to right, var(--color-green-500), var(--color-blue-500));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-            <div class="prices-grid">
-              <div class="price-category">
-                <h3 class="category-title text-green">Papel e Papelão</h3>
-                <div class="price-table-container">
-                  <table class="price-table">
-                    <thead>
-                      <tr>
-                        <th>Material</th>
-                        <th>Valor/kg</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Papel Branco</td>
-                        <td class="text-right">R$ 0,60</td>
-                      </tr>
-                      <tr>
-                        <td>Papelão</td>
-                        <td class="text-right">R$ 0,40</td>
-                      </tr>
-                      <tr>
-                        <td>Jornal</td>
-                        <td class="text-right">R$ 0,30</td>
-                      </tr>
-                      <tr>
-                        <td>Revista</td>
-                        <td class="text-right">R$ 0,35</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+.dark .blog-post-image {
+  background: linear-gradient(to right, #054b1f, #012485);
+}
 
-              <div class="price-category">
-                <h3 class="category-title text-green">Plásticos</h3>
-                <div class="price-table-container">
-                  <table class="price-table">
-                    <thead>
-                      <tr>
-                        <th>Material</th>
-                        <th>Valor/kg</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>PET (Garrafas)</td>
-                        <td class="text-right">R$ 1,80</td>
-                      </tr>
-                      <tr>
-                        <td>PEAD (Frascos)</td>
-                        <td class="text-right">R$ 1,50</td>
-                      </tr>
-                      <tr>
-                        <td>PVC</td>
-                        <td class="text-right">R$ 1,20</td>
-                      </tr>
-                      <tr>
-                        <td>Plástico Filme</td>
-                        <td class="text-right">R$ 1,00</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+.blog-icon {
+  font-size: 4rem;
+  color: var(--color-white);
+}
 
-              <div class="price-category">
-                <h3 class="category-title text-green">Metais</h3>
-                <div class="price-table-container">
-                  <table class="price-table">
-                    <thead>
-                      <tr>
-                        <th>Material</th>
-                        <th>Valor/kg</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Alumínio (Latas)</td>
-                        <td class="text-right">R$ 5,50</td>
-                      </tr>
-                      <tr>
-                        <td>Cobre</td>
-                        <td class="text-right">R$ 28,00</td>
-                      </tr>
-                      <tr>
-                        <td>Ferro</td>
-                        <td class="text-right">R$ 0,40</td>
-                      </tr>
-                      <tr>
-                        <td>Aço Inox</td>
-                        <td class="text-right">R$ 3,80</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+.blog-post-content {
+  padding: var(--spacing-4);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
-              <div class="price-category">
-                <h3 class="category-title text-green">Vidros e Outros</h3>
-                <div class="price-table-container">
-                  <table class="price-table">
-                    <thead>
-                      <tr>
-                        <th>Material</th>
-                        <th>Valor/kg</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Vidro Incolor</td>
-                        <td class="text-right">R$ 0,20</td>
-                      </tr>
-                      <tr>
-                        <td>Vidro Colorido</td>
-                        <td class="text-right">R$ 0,15</td>
-                      </tr>
-                      <tr>
-                        <td>Óleo de Cozinha</td>
-                        <td class="text-right">R$ 1,00</td>
-                      </tr>
-                      <tr>
-                        <td>Eletrônicos</td>
-                        <td class="text-right">Variável</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
+.blog-post-content h4 {
+  margin-top: 0;
+  margin-bottom: var(--spacing-2);
+  font-size: 1.25rem;
+}
 
-            <div class="info-box green">
-              <h3 class="info-title">Informações Importantes</h3>
-              <ul class="info-list">
-                <li>Os preços são referentes a materiais limpos e separados corretamente.</li>
+.blog-post-meta {
+  display: flex;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  flex-wrap: wrap;
+}
+
+.blog-post-meta span {
+  display: flex;
+  align-items: center;
+}
+
+.blog-post-meta i {
+  margin-right: var(--spacing-1);
+}
+
+.blog-post-excerpt {
+  margin-bottom: var(--spacing-4);
+  flex: 1;
+}
+
+.blog-post-topics {
+  margin-bottom: var(--spacing-4);
+  padding: var(--spacing-3);
+  background-color: var(--color-gray-50);
+  border-radius: var(--border-radius);
+}
+
+.dark .blog-post-topics {
+  background-color: var(--color-gray-700);
+}
+
+.blog-post-topics h5 {
+  margin-top: 0;
+  margin-bottom: var(--spacing-2);
+  font-size: var(--font-size-sm);
+}
+
+.blog-post-topics ul {
+  margin: 0;
+  padding-left: var(--spacing-4);
+  font-size: var(--font-size-sm);
+}
+
+.blog-post-topics li {
+  margin-bottom: var(--spacing-1);
+}
+
+.blog-post-topics li:last-child {
+  margin-bottom: 0;
+}

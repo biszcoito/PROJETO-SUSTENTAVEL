@@ -1,242 +1,284 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#16a34a" />
-  <meta name="description" content="ASCAMAREA - Área Administrativa" />
-  <title>Área Administrativa | ASCAMAREA</title>
-  <link href="./imgs/logo.png" rel="icon" type="image/png"/>
-  
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="admin.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Administrativo - ASCAMAREA</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="admin.css">
+  <!-- Adicionar Quill Editor -->
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 </head>
 <body>
+  <!-- Header -->
   <header class="site-header">
     <div class="container header-container">
       <div class="logo">
         <i class="fas fa-recycle"></i>
         <h1>ASCAMAREA</h1>
       </div>
+      
+      <nav class="main-nav">
+        <a href="index.html">Início</a>
+        <a href="blog.html">Blog</a>
+        <a href="admin.html" class="active">Administração</a>
+      </nav>
+      
       <div class="header-actions">
-        <a href="index.html" class="btn btn-light">Voltar ao site</a>
+        <div class="theme-toggle">
+          <label class="switch">
+            <input type="checkbox" id="darkModeToggle">
+            <span class="slider round"></span>
+          </label>
+        </div>
+        
+        <button id="mobileMenuButton" class="mobile-menu-button">
+          <i class="fas fa-bars"></i>
+        </button>
       </div>
+    </div>
+    
+    <!-- Mobile Menu (hidden by default) -->
+    <div id="mobileMenu" class="mobile-menu hidden">
+      <nav class="mobile-nav">
+        <a href="index.html">Início</a>
+        <a href="blog.html">Blog</a>
+        <a href="admin.html" class="active">Administração</a>
+      </nav>
     </div>
   </header>
 
-  <main class="container admin-container">
-    <div id="login-section" class="admin-section">
-      <div class="card">
-        <div class="card-header">
-          <h2>Acesso Administrativo</h2>
-        </div>
-        <div class="card-body">
-          <form id="login-form" class="admin-form">
-            <div class="form-group">
-              <label for="username">Nome de Usuário:</label>
-              <input type="text" id="username" class="form-control" required>
-            </div>
-            <div class="form-group">
-              <label for="password">Senha de Acesso:</label>
-              <input type="password" id="password" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-green btn-full">Acessar</button>
-          </form>
-          <div id="login-error" class="error-message hidden">Senha incorreta. Tente novamente.</div>
-        </div>
+  <!-- Login Section -->
+  <section id="login-section" class="admin-section">
+    <div class="container">
+      <div class="admin-card">
+        <h2 class="admin-title">Login Administrativo</h2>
+        <p class="admin-subtitle">Faça login para acessar o painel administrativo</p>
+        
+        <form id="login-form" class="admin-form">
+          <div class="form-group">
+            <label for="username">Usuário:</label>
+            <input type="text" id="username" name="username" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" required>
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" class="btn btn-green">Entrar</button>
+          </div>
+        </form>
       </div>
     </div>
+  </section>
 
-    <div id="admin-panel" class="admin-section hidden">
+  <!-- Admin Dashboard -->
+  <section id="admin-dashboard" class="admin-section hidden">
+    <div class="container">
       <div class="admin-header">
-        <h2>Painel Administrativo</h2>
-        <button id="logout-btn" class="btn btn-outline-green">Sair</button>
+        <h2 class="admin-title">Painel Administrativo</h2>
+        <div class="admin-actions">
+          <button id="logout-btn" class="btn btn-outline-green">
+            <i class="fas fa-sign-out-alt"></i> Sair
+          </button>
+        </div>
       </div>
-
-      <div class="tabs">
-        <div class="tabs-list admin-tabs">
-          <button class="tab-btn active" data-tab="new-content">
-            <i class="fas fa-plus-circle"></i>
-            <span>Novo Conteúdo</span>
-          </button>
-          <button class="tab-btn" data-tab="manage-content">
-            <i class="fas fa-list"></i>
-            <span>Gerenciar Conteúdo</span>
-          </button>
-        </div>
-
-        <div class="tab-content" id="new-content-tab">
-          <div class="card">
-            <div class="card-header">
-              <h3>Criar Novo Conteúdo</h3>
-            </div>
-            <div class="card-body">
-              <div class="content-type-selector">
-                <label>Tipo de Conteúdo:</label>
-                <div class="content-type-options">
-                  <label class="content-type-option">
-                    <input type="radio" name="content-type" value="article" checked>
-                    <span class="content-type-label">
-                      <i class="fas fa-newspaper"></i>
-                      Artigo
-                    </span>
-                  </label>
-                  <label class="content-type-option">
-                    <input type="radio" name="content-type" value="announcement">
-                    <span class="content-type-label">
-                      <i class="fas fa-bullhorn"></i>
-                      Comunicado
-                    </span>
-                  </label>
-                </div>
-              </div>
-
-              <form id="content-form" class="admin-form">
-                <div class="form-group">
-                  <label for="content-title">Título:</label>
-                  <input type="text" id="content-title" class="form-control" required>
-                </div>
-                
-                <div class="form-group article-field">
-                  <label for="content-author">Autor:</label>
-                  <input type="text" id="content-author" class="form-control">
-                </div>
-                
-                <div class="form-group">
-                  <label for="content-category">Categoria:</label>
-                  <select id="content-category" class="form-control" required>
-                    <option value="">Selecione uma categoria</option>
-                    <option value="Reciclagem">Reciclagem</option>
-                    <option value="Compostagem">Compostagem</option>
-                    <option value="Sustentabilidade">Sustentabilidade</option>
-                    <option value="Meio Ambiente">Meio Ambiente</option>
-                    <option value="Educação Ambiental">Educação Ambiental</option>
-                    <option value="Coleta Seletiva">Coleta Seletiva</option>
-                    <option value="Eventos">Eventos</option>
-                    <option value="Notícias">Notícias</option>
-                  </select>
-                </div>
-                
-                <div class="form-group article-field">
-                  <label for="content-tags">Tags (separadas por vírgula):</label>
-                  <input type="text" id="content-tags" class="form-control" placeholder="Ex: reciclagem, plástico, meio ambiente">
-                </div>
-                
-                <div class="form-group">
-                  <label for="content-icon">Ícone:</label>
-                  <select id="content-icon" class="form-control" required>
-                    <option value="fa-recycle">Reciclagem</option>
-                    <option value="fa-seedling">Planta/Compostagem</option>
-                    <option value="fa-leaf">Folha/Natureza</option>
-                    <option value="fa-trash-restore">Gestão de Resíduos</option>
-                    <option value="fa-water">Água</option>
-                    <option value="fa-tree">Árvore</option>
-                    <option value="fa-sun">Sol/Energia</option>
-                    <option value="fa-bullhorn">Comunicado</option>
-                    <option value="fa-calendar-alt">Evento</option>
-                    <option value="fa-clock">Horário</option>
-                    <option value="fa-exclamation-circle">Alerta</option>
-                  </select>
-                </div>
-                
-                <div class="form-group">
-                  <label for="content-summary">Resumo:</label>
-                  <textarea id="content-summary" class="form-control" rows="3" required></textarea>
-                </div>
-                
-                <div class="form-group">
-                  <label for="content-body">Conteúdo:</label>
-                  <div class="editor-toolbar">
-                    <button type="button" class="toolbar-btn" data-format="h2">H2</button>
-                    <button type="button" class="toolbar-btn" data-format="h3">H3</button>
-                    <button type="button" class="toolbar-btn" data-format="p">P</button>
-                    <button type="button" class="toolbar-btn" data-format="bold">B</button>
-                    <button type="button" class="toolbar-btn" data-format="italic">I</button>
-                    <button type="button" class="toolbar-btn" data-format="ul">Lista</button>
-                    <button type="button" class="toolbar-btn" data-format="ol">Lista Numerada</button>
-                    <button type="button" class="toolbar-btn" data-format="info-box">Caixa Info</button>
-                  </div>
-                  <textarea id="content-body" class="form-control content-editor" rows="15" required></textarea>
-                </div>
-                
-                <div class="form-actions">
-                  <button type="submit" class="btn btn-green">Publicar</button>
-                  <button type="button" class="btn btn-outline-green" id="preview-btn">Pré-visualizar</button>
-                </div>
-              </form>
-            </div>
+      
+      <div class="admin-tabs">
+        <button class="admin-tab-btn active" data-tab="content">Gerenciar Conteúdo</button>
+        <button class="admin-tab-btn" data-tab="create">Criar Novo</button>
+      </div>
+      
+      <!-- Content Management Tab -->
+      <div id="content-tab" class="admin-tab-content">
+        <div class="admin-filters">
+          <div class="filter-group">
+            <label for="content-filter">Filtrar por tipo:</label>
+            <select id="content-filter">
+              <option value="all">Todos</option>
+              <option value="article">Artigos</option>
+              <option value="announcement">Comunicados</option>
+            </select>
+          </div>
+          
+          <div class="search-group">
+            <input type="text" id="content-search" placeholder="Buscar conteúdo...">
+            <button id="search-btn" class="btn btn-light-gray">
+              <i class="fas fa-search"></i>
+            </button>
           </div>
         </div>
-
-        <div class="tab-content hidden" id="manage-content-tab">
-          <div class="card">
-            <div class="card-header">
-              <h3>Conteúdo Publicado</h3>
+        
+        <div class="content-list-container">
+          <table class="content-table">
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Tipo</th>
+                <th>Data</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="content-list">
+              <!-- Conteúdo será carregado via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Create Content Tab -->
+      <div id="create-tab" class="admin-tab-content hidden">
+        <div class="admin-card">
+          <h3 class="card-title">Criar Novo Conteúdo</h3>
+          
+          <form id="content-form" class="admin-form">
+            <div class="form-group">
+              <label for="content-type">Tipo de Conteúdo:</label>
+              <select id="content-type" name="type" required>
+                <option value="">Selecione o tipo</option>
+                <option value="article">Artigo</option>
+                <option value="announcement">Comunicado</option>
+              </select>
+              <div class="form-help">
+                <i class="fas fa-info-circle"></i>
+                <span>Artigos são mais longos e detalhados. Comunicados são mais curtos e diretos.</span>
+              </div>
             </div>
-            <div class="card-body">
-              <div class="content-filter">
-                <label>Filtrar por tipo:</label>
-                <div class="filter-options">
-                  <label class="filter-option">
-                    <input type="radio" name="content-filter" value="all" checked>
-                    <span class="filter-label">Todos</span>
-                  </label>
-                  <label class="filter-option">
-                    <input type="radio" name="content-filter" value="article">
-                    <span class="filter-label">Artigos</span>
-                  </label>
-                  <label class="filter-option">
-                    <input type="radio" name="content-filter" value="announcement">
-                    <span class="filter-label">Comunicados</span>
-                  </label>
+            
+            <div class="form-group">
+              <label for="content-title">Título:</label>
+              <input type="text" id="content-title" name="title" required>
+              <div class="form-help">
+                <i class="fas fa-info-circle"></i>
+                <span>Título principal do seu conteúdo. Seja claro e objetivo.</span>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="content-summary">Resumo:</label>
+              <textarea id="content-summary" name="summary" rows="3" required></textarea>
+              <div class="form-help">
+                <i class="fas fa-info-circle"></i>
+                <span>Breve descrição que aparecerá na listagem do blog (máximo 200 caracteres).</span>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="content-category">Categoria:</label>
+              <select id="content-category" name="category">
+                <option value="Reciclagem">Reciclagem</option>
+                <option value="Sustentabilidade">Sustentabilidade</option>
+                <option value="Eventos">Eventos</option>
+                <option value="Notícias">Notícias</option>
+                <option value="Educação Ambiental">Educação Ambiental</option>
+              </select>
+            </div>
+            
+            <div id="article-fields" class="conditional-fields hidden">
+              <div class="form-group">
+                <label for="content-author">Autor:</label>
+                <input type="text" id="content-author" name="author">
+              </div>
+              
+              <div class="form-group">
+                <label for="content-tags">Tags (separadas por vírgula):</label>
+                <input type="text" id="content-tags" name="tags">
+                <div class="form-help">
+                  <i class="fas fa-info-circle"></i>
+                  <span>Ex: reciclagem, plástico, meio ambiente</span>
                 </div>
               </div>
-              
-              <div class="search-box">
-                <input type="text" id="search-content" class="form-control" placeholder="Buscar conteúdo...">
-                <button class="btn btn-light-gray"><i class="fas fa-search"></i></button>
+            </div>
+            
+            <div class="form-group">
+              <label for="content-icon">Ícone:</label>
+              <div class="icon-selector">
+                <div class="selected-icon">
+                  <i id="selected-icon-preview" class="fas fa-recycle"></i>
+                  <input type="hidden" id="content-icon" name="icon" value="fa-recycle">
+                </div>
+                <button type="button" id="open-icon-selector" class="btn btn-sm btn-light-gray">
+                  Escolher Ícone
+                </button>
               </div>
-              
-              <div id="content-list" class="content-list">
-                <!-- O conteúdo será carregado dinamicamente aqui -->
+              <div id="icon-grid" class="icon-grid hidden">
+                <div class="icon-item" data-icon="fa-recycle"><i class="fas fa-recycle"></i></div>
+                <div class="icon-item" data-icon="fa-leaf"><i class="fas fa-leaf"></i></div>
+                <div class="icon-item" data-icon="fa-tree"><i class="fas fa-tree"></i></div>
+                <div class="icon-item" data-icon="fa-water"><i class="fas fa-water"></i></div>
+                <div class="icon-item" data-icon="fa-seedling"><i class="fas fa-seedling"></i></div>
+                <div class="icon-item" data-icon="fa-solar-panel"><i class="fas fa-solar-panel"></i></div>
+                <div class="icon-item" data-icon="fa-mountain"><i class="fas fa-mountain"></i></div>
+                <div class="icon-item" data-icon="fa-fish"><i class="fas fa-fish"></i></div>
+                <div class="icon-item" data-icon="fa-faucet"><i class="fas fa-faucet"></i></div>
+                <div class="icon-item" data-icon="fa-trash"><i class="fas fa-trash"></i></div>
+                <div class="icon-item" data-icon="fa-trash-restore"><i class="fas fa-trash-restore"></i></div>
+                <div class="icon-item" data-icon="fa-lightbulb"><i class="fas fa-lightbulb"></i></div>
+                <div class="icon-item" data-icon="fa-calendar"><i class="fas fa-calendar"></i></div>
+                <div class="icon-item" data-icon="fa-bullhorn"><i class="fas fa-bullhorn"></i></div>
+                <div class="icon-item" data-icon="fa-info-circle"><i class="fas fa-info-circle"></i></div>
+                <div class="icon-item" data-icon="fa-exclamation-circle"><i class="fas fa-exclamation-circle"></i></div>
               </div>
             </div>
-          </div>
+            
+            <div class="form-group">
+              <label for="editor-container">Conteúdo:</label>
+              <div id="editor-toolbar"></div>
+              <div id="editor-container" class="editor-container"></div>
+              <input type="hidden" id="content-body" name="content">
+              <div class="form-help">
+                <i class="fas fa-info-circle"></i>
+                <span>Use as ferramentas acima para formatar seu texto. Você pode adicionar títulos, listas, links e muito mais.</span>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Visualização:</label>
+              <div class="preview-toggle">
+                <button type="button" id="preview-btn" class="btn btn-sm btn-light-gray">
+                  <i class="fas fa-eye"></i> Visualizar
+                </button>
+              </div>
+              <div id="content-preview" class="content-preview hidden"></div>
+            </div>
+            
+            <div class="form-actions">
+              <button type="button" id="cancel-btn" class="btn btn-light-gray">Cancelar</button>
+              <button type="submit" class="btn btn-green">Salvar</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
-  </main>
+  </section>
 
-  <div id="preview-modal" class="modal hidden">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Pré-visualização</h3>
-        <button class="close-modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div id="preview-content"></div>
-      </div>
-    </div>
-  </div>
-
+  <!-- Confirmation Modal -->
   <div id="confirmation-modal" class="modal hidden">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>Confirmação</h3>
-        <button class="close-modal">&times;</button>
+        <h3 id="modal-title">Confirmação</h3>
+        <button id="close-modal" class="close-btn">&times;</button>
       </div>
       <div class="modal-body">
-        <p id="confirmation-message">Tem certeza que deseja realizar esta ação?</p>
-        <div class="modal-actions">
-          <button id="confirm-yes" class="btn btn-red">Sim</button>
-          <button id="confirm-no" class="btn btn-outline-green">Não</button>
-        </div>
+        <p id="modal-message">Tem certeza que deseja realizar esta ação?</p>
+      </div>
+      <div class="modal-footer">
+        <button id="modal-cancel" class="btn btn-light-gray">Cancelar</button>
+        <button id="modal-confirm" class="btn btn-green">Confirmar</button>
       </div>
     </div>
   </div>
 
+  <!-- Feedback Toast -->
+  <div id="toast" class="toast hidden">
+    <div id="toast-content" class="toast-content"></div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
   <script src="data/content.js"></script>
   <script src="admin.js"></script>
 </body>
