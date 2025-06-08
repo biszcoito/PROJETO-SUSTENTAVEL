@@ -155,7 +155,6 @@ function getContentByType(type) {
 }
 // Função para adicionar novo conteúdo
 function addContent(content) {
-  //isso era para ser salvo em um banco de dados
   blogContent.articles.push(content)
   return content
 }
