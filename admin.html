@@ -89,6 +89,7 @@
       
       <div class="admin-tabs">
         <button class="admin-tab-btn active" data-tab="content">Gerenciar Conteúdo</button>
+        <button class="admin-tab-btn" data-tab="gallery">Gerenciar Galeria</button>
         <button class="admin-tab-btn" data-tab="create">Criar Novo</button>
       </div>
       
@@ -126,6 +127,41 @@
               <!-- Conteúdo será carregado via JavaScript -->
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- Gallery Management Tab -->
+      <div id="gallery-tab" class="admin-tab-content hidden">
+        <div class="admin-filters">
+          <div class="filter-group">
+            <label for="gallery-filter">Filtrar por categoria:</label>
+            <select id="gallery-filter">
+              <option value="all">Todas</option>
+              <option value="Ações Ambientais">Ações Ambientais</option>
+              <option value="Educação Ambiental">Educação Ambiental</option>
+              <option value="Reflorestamento">Reflorestamento</option>
+              <option value="Reciclagem">Reciclagem</option>
+              <option value="Eventos">Eventos</option>
+              <option value="Capacitação">Capacitação</option>
+            </select>
+          </div>
+          
+          <div class="search-group">
+            <input type="text" id="gallery-search" placeholder="Buscar na galeria...">
+            <button id="gallery-search-btn" class="btn btn-light-gray">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+
+          <div class="filter-group">
+            <button id="add-gallery-item" class="btn btn-green">
+              <i class="fas fa-plus"></i> Adicionar Item
+            </button>
+          </div>
+        </div>
+        
+        <div id="gallery-grid" class="gallery-admin-grid">
+          <!-- Itens da galeria serão carregados via JavaScript -->
         </div>
       </div>
       
@@ -254,6 +290,61 @@
       </div>
     </div>
   </section>
+
+  <!-- Gallery Item Modal -->
+  <div id="gallery-modal" class="modal hidden">
+    <div class="modal-content gallery-modal-content">
+      <div class="modal-header">
+        <h3 id="gallery-modal-title">Adicionar Item à Galeria</h3>
+        <button id="close-gallery-modal" class="close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="gallery-form" class="admin-form">
+          <div class="form-group">
+            <label for="gallery-item-title">Título:</label>
+            <input type="text" id="gallery-item-title" name="title" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="gallery-item-description">Descrição:</label>
+            <textarea id="gallery-item-description" name="description" rows="3" required></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="gallery-item-category">Categoria:</label>
+            <select id="gallery-item-category" name="category" required>
+              <option value="Ações Ambientais">Ações Ambientais</option>
+              <option value="Educação Ambiental">Educação Ambiental</option>
+              <option value="Reflorestamento">Reflorestamento</option>
+              <option value="Reciclagem">Reciclagem</option>
+              <option value="Eventos">Eventos</option>
+              <option value="Capacitação">Capacitação</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="gallery-item-image">URL da Imagem:</label>
+            <input type="url" id="gallery-item-image" name="imageUrl" required>
+            <div class="form-help">
+              <i class="fas fa-info-circle"></i>
+              <span>Cole aqui a URL de uma imagem (ex: do Unsplash, Pixabay, etc.)</span>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label>Pré-visualização:</label>
+            <div id="image-preview" class="image-preview hidden">
+              <img id="preview-image" src="/placeholder.svg" alt="Pré-visualização">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button id="gallery-modal-cancel" class="btn btn-light-gray">Cancelar</button>
+        <button id="gallery-modal-save" class="btn btn-green">Salvar</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Confirmation Modal -->
   <div id="confirmation-modal" class="modal hidden">

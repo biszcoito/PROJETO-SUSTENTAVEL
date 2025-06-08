@@ -1,5 +1,7 @@
-// precisamos melhorar isso...
+// Sistema de armazenamento de conteúdo padronizado com persistência
+const STORAGE_KEY = "ascamarea_blog_content"
 
+// Dados iniciais (serão carregados do localStorage se existirem)
 const blogContent = {
   articles: [
     {
@@ -138,50 +140,351 @@ const blogContent = {
         <p>Equipe ASCAMAREA</p>
       `,
     },
+    {
+      id: "evento-dia-meio-ambiente",
+      type: "announcement",
+      title: "Evento especial: Dia Mundial do Meio Ambiente",
+      date: "2023-05-28",
+      category: "Eventos",
+      icon: "fa-calendar-alt",
+      summary:
+        "Participe da nossa programação especial em comemoração ao Dia Mundial do Meio Ambiente. Atividades educativas, oficinas e muito mais!",
+      content: `
+        <p>Caros membros da comunidade,</p>
+        
+        <p>Em comemoração ao <strong>Dia Mundial do Meio Ambiente (5 de junho)</strong>, a ASCAMAREA convida toda a comunidade para participar de nossa programação especial.</p>
+        
+        <h3>Programação do evento:</h3>
+        
+        <h4>📅 Data: 5 de junho de 2023</h4>
+        <h4>🕘 Horário: 8h às 17h</h4>
+        <h4>📍 Local: Praça Central de Açailândia</h4>
+        
+        <h3>Atividades programadas:</h3>
+        <ul>
+          <li><strong>8h às 10h:</strong> Oficina de compostagem doméstica</li>
+          <li><strong>10h às 12h:</strong> Palestra sobre reciclagem e economia circular</li>
+          <li><strong>14h às 16h:</strong> Atividades educativas para crianças</li>
+          <li><strong>16h às 17h:</strong> Plantio de mudas nativas</li>
+        </ul>
+        
+        <div class="info-box green">
+          <h3 class="info-title"><i class="fas fa-gift"></i> Brindes especiais</h3>
+          <p>Todos os participantes receberão mudas de plantas nativas e material educativo sobre sustentabilidade!</p>
+        </div>
+        
+        <p>Venha fazer parte desta importante iniciativa pela preservação do nosso meio ambiente. Sua participação faz a diferença!</p>
+        
+        <p>Para mais informações, entre em contato conosco.</p>
+        
+        <p>Esperamos vocês!</p>
+        <p>Equipe ASCAMAREA</p>
+      `,
+    },
+  ],
+  gallery: [
+    {
+      id: "reciclagem-acao-1",
+      title: "Ação de reciclagem no bairro Centro",
+      description:
+        "Catadores da ASCAMAREA realizando coleta seletiva no centro da cidade, promovendo a conscientização ambiental e a sustentabilidade.",
+      imageUrl: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400&h=300&fit=crop",
+      date: "2023-06-15",
+      category: "Ações Ambientais",
+    },
+    {
+      id: "oficina-compostagem-1",
+      title: "Oficina de compostagem doméstica",
+      description:
+        "Workshop educativo ensinando a comunidade como fazer compostagem em casa, transformando resíduos orgânicos em adubo natural.",
+      imageUrl: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=300&fit=crop",
+      date: "2023-06-10",
+      category: "Educação Ambiental",
+    },
+    {
+      id: "plantio-mudas-1",
+      title: "Plantio de mudas nativas",
+      description:
+        "Voluntários e membros da comunidade participando do plantio de mudas nativas para recuperação de áreas verdes urbanas.",
+      imageUrl: "https://images.unsplash.com/photo-1574263867128-a3d5c1b1deae?w=400&h=300&fit=crop",
+      date: "2023-06-05",
+      category: "Reflorestamento",
+    },
+    {
+      id: "separacao-materiais-1",
+      title: "Separação de materiais recicláveis",
+      description:
+        "Processo de triagem e separação de materiais recicláveis na sede da ASCAMAREA, garantindo a qualidade dos materiais para reciclagem.",
+      imageUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop",
+      date: "2023-05-30",
+      category: "Reciclagem",
+    },
+    {
+      id: "evento-meio-ambiente-1",
+      title: "Celebração do Dia Mundial do Meio Ambiente",
+      description:
+        "Grande evento comemorativo com atividades educativas, palestras e conscientização sobre a importância da preservação ambiental.",
+      imageUrl: "https://images.unsplash.com/photo-1569163139394-de4e4f43e4e3?w=400&h=300&fit=crop",
+      date: "2023-05-25",
+      category: "Eventos",
+    },
+    {
+      id: "capacitacao-catadores-1",
+      title: "Capacitação de catadores",
+      description:
+        "Programa de capacitação profissional para catadores, oferecendo treinamento em técnicas de coleta, separação e valorização de materiais recicláveis.",
+      imageUrl: "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=400&h=300&fit=crop",
+      date: "2023-05-20",
+      category: "Capacitação",
+    },
   ],
 }
 
-// Função para obter um artigo pelo ID
+// Carregar dados do localStorage se existirem
+function loadFromStorage() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    if (stored) {
+      const parsedData = JSON.parse(stored)
+      if (parsedData && parsedData.articles) {
+        // Manter compatibilidade com versões antigas que não tinham galeria
+        blogContent.articles = parsedData.articles
+        if (parsedData.gallery) {
+          blogContent.gallery = parsedData.gallery
+        }
+        console.log(
+          "Dados carregados do localStorage:",
+          blogContent.articles.length,
+          "artigos,",
+          blogContent.gallery.length,
+          "itens da galeria",
+        )
+      }
+    }
+  } catch (error) {
+    console.error("Erro ao carregar dados do localStorage:", error)
+  }
+}
+
+// Salvar dados no localStorage
+function saveToStorage() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(blogContent))
+    console.log("Dados salvos no localStorage")
+
+    // Disparar evento personalizado para notificar outras páginas
+    window.dispatchEvent(
+      new CustomEvent("blogContentUpdated", {
+        detail: { content: blogContent },
+      }),
+    )
+  } catch (error) {
+    console.error("Erro ao salvar dados no localStorage:", error)
+  }
+}
+
+// Carregar dados na inicialização
+loadFromStorage()
+
+// Funções para gerenciar o conteúdo
 function getContentById(id) {
   return blogContent.articles.find((article) => article.id === id)
 }
-// Função para obter todos os artigos
+
 function getAllContent() {
-  return blogContent.articles
+  return blogContent.articles.sort((a, b) => new Date(b.date) - new Date(a.date))
 }
-// Função para obter artigos por tipo (artigo ou anuncio)
+
 function getContentByType(type) {
-  return blogContent.articles.filter((article) => article.type === type)
+  return blogContent.articles
+    .filter((article) => article.type === type)
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
 }
-// Função para adicionar novo conteúdo
+
 function addContent(content) {
-  blogContent.articles.push(content)
+  // Gerar ID único se não fornecido
+  if (!content.id) {
+    content.id = generateSlug(content.title) + "-" + Date.now()
+  }
+
+  // Adicionar data atual se não fornecida
+  if (!content.date) {
+    content.date = new Date().toISOString().split("T")[0]
+  }
+
+  blogContent.articles.unshift(content) // Adicionar no início para aparecer primeiro
+  saveToStorage() // Salvar no localStorage
   return content
 }
-// Função para atualizar conteúdo existente
+
 function updateContent(id, updatedContent) {
+  console.log("updateContent chamado com:", { id, updatedContent })
+
   const index = blogContent.articles.findIndex((article) => article.id === id)
+  console.log("Índice encontrado:", index)
+
   if (index !== -1) {
-    blogContent.articles[index] = { ...blogContent.articles[index], ...updatedContent }
+    // Preservar o ID e data original
+    const originalId = blogContent.articles[index].id
+    const originalDate = blogContent.articles[index].date
+
+    // Atualizar o conteúdo mantendo ID e data originais
+    blogContent.articles[index] = {
+      ...updatedContent,
+      id: originalId,
+      date: originalDate,
+    }
+
+    console.log("Conteúdo atualizado:", blogContent.articles[index])
+
+    saveToStorage() // Salvar no localStorage
     return blogContent.articles[index]
   }
+
+  console.error("Conteúdo não encontrado para atualização:", id)
   return null
 }
-// Função para excluir conteúdo
+
 function deleteContent(id) {
   const index = blogContent.articles.findIndex((article) => article.id === id)
   if (index !== -1) {
     const deleted = blogContent.articles.splice(index, 1)
+    saveToStorage() // Salvar no localStorage
+    console.log("Conteúdo deletado:", deleted[0])
     return deleted[0]
   }
+  console.error("Conteúdo não encontrado para exclusão:", id)
   return null
 }
-// Exportar as funções
-window.blogData = {
-  getContentById,
-  getAllContent,
-  getContentByType,
-  addContent,
-  updateContent,
-  deleteContent,
+
+// Função para remover conteúdo (alias para deleteContent)
+function removeContent(id) {
+  return deleteContent(id)
+}
+
+// Funções para gerenciar a galeria
+function getAllGalleryItems() {
+  return blogContent.gallery.sort((a, b) => new Date(b.date) - new Date(a.date))
+}
+
+function getGalleryItemById(id) {
+  return blogContent.gallery.find((item) => item.id === id)
+}
+
+function addGalleryItem(item) {
+  // Gerar ID único se não fornecido
+  if (!item.id) {
+    item.id = generateSlug(item.title) + "-" + Date.now()
+  }
+
+  // Adicionar data atual se não fornecida
+  if (!item.date) {
+    item.date = new Date().toISOString().split("T")[0]
+  }
+
+  blogContent.gallery.unshift(item) // Adicionar no início para aparecer primeiro
+  saveToStorage() // Salvar no localStorage
+  return item
+}
+
+function updateGalleryItem(id, updatedItem) {
+  console.log("updateGalleryItem chamado com:", { id, updatedItem })
+
+  const index = blogContent.gallery.findIndex((item) => item.id === id)
+  console.log("Índice encontrado:", index)
+
+  if (index !== -1) {
+    // Preservar o ID e data original
+    const originalId = blogContent.gallery[index].id
+    const originalDate = blogContent.gallery[index].date
+
+    // Atualizar o item mantendo ID e data originais
+    blogContent.gallery[index] = {
+      ...updatedItem,
+      id: originalId,
+      date: originalDate,
+    }
+
+    console.log("Item da galeria atualizado:", blogContent.gallery[index])
+
+    saveToStorage() // Salvar no localStorage
+    return blogContent.gallery[index]
+  }
+
+  console.error("Item da galeria não encontrado para atualização:", id)
+  return null
+}
+
+function deleteGalleryItem(id) {
+  const index = blogContent.gallery.findIndex((item) => item.id === id)
+  if (index !== -1) {
+    const deleted = blogContent.gallery.splice(index, 1)
+    saveToStorage() // Salvar no localStorage
+    console.log("Item da galeria deletado:", deleted[0])
+    return deleted[0]
+  }
+  console.error("Item da galeria não encontrado para exclusão:", id)
+  return null
+}
+
+// Função auxiliar para gerar slug
+function generateSlug(title) {
+  return title
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // Remove acentos
+    .replace(/[^a-z0-9\s-]/g, "") // Remove caracteres especiais
+    .replace(/\s+/g, "-") // Substitui espaços por hífens
+    .replace(/-+/g, "-") // Remove hífens duplicados
+    .trim()
+}
+
+// Função para resetar dados (útil para desenvolvimento)
+function resetToDefaults() {
+  localStorage.removeItem(STORAGE_KEY)
+  location.reload()
+}
+
+// Exportar as funções para uso global
+if (typeof window !== "undefined") {
+  window.blogData = {
+    getContentById,
+    getAllContent,
+    getContentByType,
+    addContent,
+    updateContent,
+    deleteContent,
+    removeContent,
+    getAllGalleryItems,
+    getGalleryItemById,
+    addGalleryItem,
+    updateGalleryItem,
+    deleteGalleryItem,
+    resetToDefaults,
+    saveToStorage,
+    loadFromStorage,
+  }
+
+  // Escutar mudanças no localStorage de outras abas
+  window.addEventListener("storage", (e) => {
+    if (e.key === STORAGE_KEY) {
+      console.log("Dados atualizados em outra aba, recarregando...")
+      loadFromStorage()
+
+      // Disparar evento para atualizar a interface
+      window.dispatchEvent(
+        new CustomEvent("blogContentUpdated", {
+          detail: { content: blogContent },
+        }),
+      )
+    }
+  })
+
+  console.log(
+    "Sistema de blog inicializado com",
+    blogContent.articles.length,
+    "artigos e",
+    blogContent.gallery.length,
+    "itens da galeria",
+  )
 }

@@ -1,29 +1,45 @@
+// Variável para controlar se os scripts já foram inicializados
+let scriptsInitialized = false
+
 document.addEventListener("DOMContentLoaded", () => {
+  // Evitar inicialização múltipla
+  if (scriptsInitialized) {
+    return
+  }
+  scriptsInitialized = true
+
+  console.log("Inicializando scripts...")
+
   // Dark mode toggle
   const darkModeToggle = document.getElementById("darkModeToggle")
-  // Check for saved dark mode preference
-  if (localStorage.getItem("darkMode") === "enabled") {
-    document.documentElement.classList.add("dark")
-    darkModeToggle.checked = true
-  }
 
-  darkModeToggle.addEventListener("change", function () {
-    if (this.checked) {
+  if (darkModeToggle) {
+    // Check for saved dark mode preference
+    if (localStorage.getItem("darkMode") === "enabled") {
       document.documentElement.classList.add("dark")
-      localStorage.setItem("darkMode", "enabled")
-    } else {
-      document.documentElement.classList.remove("dark")
-      localStorage.setItem("darkMode", "disabled")
+      darkModeToggle.checked = true
     }
-  })
+
+    darkModeToggle.addEventListener("change", function () {
+      if (this.checked) {
+        document.documentElement.classList.add("dark")
+        localStorage.setItem("darkMode", "enabled")
+      } else {
+        document.documentElement.classList.remove("dark")
+        localStorage.setItem("darkMode", "disabled")
+      }
+    })
+  }
 
   // Mobile menu toggle
   const mobileMenuButton = document.getElementById("mobileMenuButton")
   const mobileMenu = document.getElementById("mobileMenu")
 
-  mobileMenuButton.addEventListener("click", () => {
-    mobileMenu.classList.toggle("hidden")
-  })
+  if (mobileMenuButton && mobileMenu) {
+    mobileMenuButton.addEventListener("click", () => {
+      mobileMenu.classList.toggle("hidden")
+    })
+  }
 
   // Navigation links smooth scrolling
   const navLinks = document.querySelectorAll(".nav-link")
@@ -40,17 +56,19 @@ document.addEventListener("DOMContentLoaded", () => {
       const targetId = this.getAttribute("href").substring(1)
 
       // Find the tab button
-      const tabButton = document.querySelector(`.tab-btn[data-tab="${targetId}"]`)
+      const tabButton = document.getElementById(targetId)
       if (tabButton) {
         // Click the tab button to activate the tab
         tabButton.click()
 
         // Scroll to the tab section
         const tabsSection = document.querySelector(".tabs")
-        tabsSection.scrollIntoView({ behavior: "smooth" })
+        if (tabsSection) {
+          tabsSection.scrollIntoView({ behavior: "smooth" })
+        }
 
         // Close mobile menu if open
-        if (!mobileMenu.classList.contains("hidden")) {
+        if (mobileMenu && !mobileMenu.classList.contains("hidden")) {
           mobileMenu.classList.add("hidden")
         }
       }
@@ -77,52 +95,125 @@ document.addEventListener("DOMContentLoaded", () => {
         content.classList.add("hidden")
       })
 
-      const tabContent = document.getElementById(`${tabName}-tab`)
-      if (tabContent) {
-        tabContent.classList.remove("hidden")
+      const targetTab = document.getElementById(`${tabName}-tab`)
+      if (targetTab) {
+        targetTab.classList.remove("hidden")
       }
 
       // Initialize specific tab content
-      if (tabName === "gamificacao") {
-        initializeQuizGame()
-      } else if (tabName === "calendario") {
-        generateCalendar()
-      } else if (tabName === "blog") {
-        // Verificar se estamos na página index ou se devemos redirecionar
-        if (
-          window.location.pathname.includes("index.html") ||
-          window.location.pathname === "/" ||
-          window.location.pathname.endsWith("/")
-        ) {
-          window.location.href = "blog.html"
-        } else {
+      try {
+        if (tabName === "gamificacao") {
+          initializeQuizGame()
+        } else if (tabName === "calendario") {
+          generateCalendar()
+        } else if (tabName === "blog") {
           loadBlogContent()
+        } else if (tabName === "galeria") {
+          loadGalleryContent()
         }
-      } else if (tabName === "mapa") {
-        initializeMap()
-      } else if (tabName === "sobre") {
-        // Não precisa de inicialização especial
+      } catch (error) {
+        console.error("Erro ao inicializar aba:", error)
       }
     })
   })
 
-  // Verificar se há uma aba especificada na URL (por exemplo, index.html?tab=calendario)
-  const urlParams = new URLSearchParams(window.location.search)
-  const tabParam = urlParams.get("tab")
+  // Escutar atualizações de conteúdo do blog
+  window.addEventListener("blogContentUpdated", () => {
+    console.log("Conteúdo do blog atualizado, recarregando aba blog...")
+    const blogTab = document.getElementById("blog-tab")
+    if (blogTab) {
+      blogTab.setAttribute("data-loaded", "false")
+      // Se a aba blog estiver ativa, recarregar
+      const activeBlogTab = document.querySelector('.tab-btn[data-tab="blog"].active')
+      if (activeBlogTab) {
+        loadBlogContent()
+      }
+    }
 
-  if (tabParam) {
-    // Tentar encontrar o botão da aba correspondente
-    const tabButton = document.querySelector(`.tab-btn[data-tab="${tabParam}"]`)
-    if (tabButton) {
-      // Simular um clique no botão da aba
-      tabButton.click()
+    // Recarregar galeria também
+    const galeriaTab = document.getElementById("galeria-tab")
+    if (galeriaTab) {
+      galeriaTab.setAttribute("data-loaded", "false")
+      // Se a aba galeria estiver ativa, recarregar
+      const activeGaleriaTab = document.querySelector('.tab-btn[data-tab="galeria"].active')
+      if (activeGaleriaTab) {
+        loadGalleryContent()
+      }
     }
-  } else {
-    // Se não houver parâmetro, ativar a primeira aba por padrão
-    const firstTabButton = document.querySelector(".tab-btn")
-    if (firstTabButton) {
-      firstTabButton.click()
+  })
+
+  // Carregar conteúdo da galeria dinamicamente
+  function loadGalleryContent() {
+    const galeriaTab = document.getElementById("galeria-tab")
+    if (!galeriaTab) return
+
+    // Verificar se o conteúdo já foi carregado
+    const forceReload = galeriaTab.getAttribute("data-loaded") === "false"
+    if (galeriaTab.getAttribute("data-loaded") === "true" && !forceReload) return
+
+    // Marcar como carregado
+    galeriaTab.setAttribute("data-loaded", "true")
+
+    // Obter o elemento onde os itens da galeria serão exibidos
+    const galeriaContainer = galeriaTab.querySelector(".card-body .row")
+    if (!galeriaContainer) return
+
+    // Limpar conteúdo existente
+    galeriaContainer.innerHTML = ""
+
+    // Verificar se o objeto blogData está disponível
+    if (typeof window.blogData === "undefined" || !window.blogData.getAllGalleryItems) {
+      console.warn("Dados da galeria não estão disponíveis ainda")
+      galeriaContainer.innerHTML = '<div class="empty-message">Carregando galeria...</div>'
+
+      // Tentar carregar novamente após um breve delay
+      setTimeout(() => {
+        if (typeof window.blogData !== "undefined" && window.blogData.getAllGalleryItems) {
+          galeriaTab.setAttribute("data-loaded", "false")
+          loadGalleryContent()
+        }
+      }, 1000)
+      return
     }
+
+    try {
+      // Recarregar dados do localStorage para garantir que temos a versão mais recente
+      if (window.blogData.loadFromStorage) {
+        window.blogData.loadFromStorage()
+      }
+
+      // Obter todos os itens da galeria
+      const galleryItems = window.blogData.getAllGalleryItems()
+
+      if (galleryItems && galleryItems.length > 0) {
+        galleryItems.forEach((item) => {
+          const galleryItemElement = createGalleryItemElement(item)
+          galeriaContainer.appendChild(galleryItemElement)
+        })
+      } else {
+        galeriaContainer.innerHTML = '<div class="empty-message">Nenhum item disponível na galeria no momento.</div>'
+      }
+
+      console.log("Galeria carregada:", galleryItems.length, "itens")
+    } catch (error) {
+      console.error("Erro ao carregar galeria:", error)
+      galeriaContainer.innerHTML = '<div class="empty-message">Erro ao carregar galeria.</div>'
+    }
+  }
+
+  // Função para criar elemento de item da galeria
+  function createGalleryItemElement(item) {
+    const itemElement = document.createElement("article")
+    itemElement.className = "card-img"
+
+    itemElement.innerHTML = `
+      <div class="image-area">
+        <img class="ah" src="${item.imageUrl}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/320x320?text=Imagem+não+encontrada'">
+      </div>
+      <span class="text-img">${item.description}</span>
+    `
+
+    return itemElement
   }
 
   // Carregar conteúdo do blog dinamicamente
@@ -130,120 +221,85 @@ document.addEventListener("DOMContentLoaded", () => {
     const blogTab = document.getElementById("blog-tab")
     if (!blogTab) return
 
-    // Verificar se o conteúdo já foi carregado
-    if (blogTab.getAttribute("data-loaded") === "true") return
+    // Verificar se o conteúdo já foi carregado (permitir recarregamento forçado)
+    const forceReload = blogTab.getAttribute("data-loaded") === "false"
+    if (blogTab.getAttribute("data-loaded") === "true" && !forceReload) return
 
     // Marcar como carregado
     blogTab.setAttribute("data-loaded", "true")
 
-    // Obter os elementos onde os posts serão exibidos
-    const blogPostsContainer = document.getElementById("blog-posts-container")
-    const announcementsContainer = document.getElementById("announcements-container")
-
-    if (!blogPostsContainer || !announcementsContainer) return
+    // Obter o elemento onde os posts serão exibidos
+    const blogPostsGrid = blogTab.querySelector(".blog-posts-grid")
+    if (!blogPostsGrid) return
 
     // Limpar conteúdo existente
-    blogPostsContainer.innerHTML = ""
-    announcementsContainer.innerHTML = ""
+    blogPostsGrid.innerHTML = ""
 
     // Verificar se o objeto blogData está disponível
     if (typeof window.blogData === "undefined") {
-      console.error("Dados do blog não estão disponíveis")
-      loadBlogDataScript()
+      console.warn("Dados do blog não estão disponíveis ainda")
+      blogPostsGrid.innerHTML = '<div class="empty-message">Carregando conteúdo...</div>'
+
+      // Tentar carregar novamente após um breve delay
+      setTimeout(() => {
+        if (typeof window.blogData !== "undefined") {
+          blogTab.setAttribute("data-loaded", "false")
+          loadBlogContent()
+        }
+      }, 1000)
       return
     }
 
-    // Obter todos os artigos
-    const articles = window.blogData.getContentByType("article")
+    try {
+      // Recarregar dados do localStorage para garantir que temos a versão mais recente
+      if (window.blogData.loadFromStorage) {
+        window.blogData.loadFromStorage()
+      }
 
-    // Obter comunicados
-    const announcements = window.blogData.getContentByType("announcement")
+      // Obter todos os artigos
+      const articles = window.blogData.getContentByType("article")
 
-    // Exibir comunicados (se houver)
-    if (announcements && announcements.length > 0) {
-      announcementsContainer.innerHTML = `
-        <h3 class="section-title">Comunicados Recentes</h3>
-        <div class="announcements-list">
-          ${announcements.map((announcement) => createAnnouncementElement(announcement)).join("")}
-        </div>
-      `
-    } else {
-      announcementsContainer.style.display = "none"
+      // Obter comunicados
+      const announcements = window.blogData.getContentByType("announcement")
+
+      // Exibir comunicados primeiro (se houver)
+      if (announcements && announcements.length > 0) {
+        announcements.slice(0, 2).forEach((announcement) => {
+          // Limitar a 2 comunicados
+          blogPostsGrid.appendChild(createBlogPostElement(announcement))
+        })
+      }
+
+      // Exibir artigos
+      if (articles && articles.length > 0) {
+        articles.slice(0, 4).forEach((article) => {
+          // Limitar a 4 artigos
+          blogPostsGrid.appendChild(createBlogPostElement(article))
+        })
+      }
+
+      // Se não há conteúdo, mostrar mensagem
+      if ((!articles || articles.length === 0) && (!announcements || announcements.length === 0)) {
+        blogPostsGrid.innerHTML = '<div class="empty-message">Nenhum conteúdo disponível no momento.</div>'
+      }
+
+      console.log("Conteúdo do blog carregado:", articles.length, "artigos,", announcements.length, "comunicados")
+    } catch (error) {
+      console.error("Erro ao carregar conteúdo do blog:", error)
+      blogPostsGrid.innerHTML = '<div class="empty-message">Erro ao carregar conteúdo do blog.</div>'
     }
-
-    // Exibir artigos
-    if (articles && articles.length > 0) {
-      const articlesHTML = articles.map((article) => createBlogPostElement(article)).join("")
-      blogPostsContainer.innerHTML = `
-        <h3 class="section-title">Artigos</h3>
-        <div class="blog-posts-grid">
-          ${articlesHTML}
-        </div>
-      `
-    } else {
-      blogPostsContainer.innerHTML = '<div class="empty-message">Nenhum artigo disponível no momento.</div>'
-    }
-
-    // Adicionar event listeners para os botões de filtro do blog
-    const blogTabButtons = document.querySelectorAll(".blog-tab-btn")
-    blogTabButtons.forEach((btn) => {
-      btn.addEventListener("click", function () {
-        // Atualizar botão ativo
-        blogTabButtons.forEach((b) => b.classList.remove("active"))
-        this.classList.add("active")
-
-        // Filtrar conteúdo
-        const contentType = this.getAttribute("data-content-type")
-        filterBlogContent(contentType)
-      })
-    })
-  }
-
-  // Função para filtrar conteúdo do blog
-  function filterBlogContent(contentType) {
-    const announcementsContainer = document.getElementById("announcements-container")
-    const blogPostsContainer = document.getElementById("blog-posts-container")
-
-    if (!announcementsContainer || !blogPostsContainer) return
-
-    if (contentType === "all") {
-      announcementsContainer.style.display = ""
-      blogPostsContainer.style.display = ""
-    } else if (contentType === "article") {
-      announcementsContainer.style.display = "none"
-      blogPostsContainer.style.display = ""
-    } else if (contentType === "announcement") {
-      announcementsContainer.style.display = ""
-      blogPostsContainer.style.display = "none"
-    }
-  }
-
-  // Função para criar elemento de comunicado
-  function createAnnouncementElement(announcement) {
-    // Formatar data
-    const date = new Date(announcement.date)
-    const formattedDate = `${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1).toString().padStart(2, "0")}/${date.getFullYear()}`
-
-    return `
-      <div class="announcement-item">
-        <div class="announcement-icon">
-          <i class="fas ${announcement.icon}"></i>
-        </div>
-        <div class="announcement-content">
-          <h4>${announcement.title}</h4>
-          <div class="announcement-meta">
-            <span><i class="fas fa-calendar-alt"></i> ${formattedDate}</span>
-            <span><i class="fas fa-tag"></i> ${announcement.category}</span>
-          </div>
-          <p>${announcement.summary}</p>
-          <a href="content-view.html?id=${announcement.id}" class="btn btn-sm btn-outline-green">Ler comunicado</a>
-        </div>
-      </div>
-    `
   }
 
   // Função para criar elemento de post do blog
   function createBlogPostElement(content) {
+    const postElement = document.createElement("div")
+    postElement.className = "blog-post"
+
+    // Adicionar classe especial para comunicados
+    if (content.type === "announcement") {
+      postElement.classList.add("announcement-post")
+    }
+
     // Formatar data
     const date = new Date(content.date)
     const formattedDate = `${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1).toString().padStart(2, "0")}/${date.getFullYear()}`
@@ -262,297 +318,187 @@ document.addEventListener("DOMContentLoaded", () => {
       `
     }
 
-    return `
-      <div class="blog-post">
-        <div class="blog-post-image">
-          <i class="fas ${content.icon} blog-icon"></i>
+    postElement.innerHTML = `
+      <div class="blog-post-image">
+        <i class="fas ${content.icon} blog-icon"></i>
+      </div>
+      <div class="blog-post-content">
+        <h4>${content.title}</h4>
+        <div class="blog-post-meta">
+          <span><i class="fas fa-calendar-alt"></i> ${formattedDate}</span>
+          ${content.author ? `<span><i class="fas fa-user"></i> ${content.author}</span>` : ""}
         </div>
-        <div class="blog-post-content">
-          <h4>${content.title}</h4>
-          <div class="blog-post-meta">
-            <span><i class="fas fa-calendar-alt"></i> ${formattedDate}</span>
-            ${content.author ? `<span><i class="fas fa-user"></i> ${content.author}</span>` : ""}
-          </div>
-          <p class="blog-post-excerpt">${content.summary}</p>
-          ${topicsHTML}
-          <a href="content-view.html?id=${content.id}" class="btn btn-green">Ler artigo completo</a>
-        </div>
+        <p class="blog-post-excerpt">${content.summary}</p>
+        ${topicsHTML}
+        <a href="content-view.html?id=${content.id}" class="btn btn-green">Ler ${content.type === "article" ? "artigo" : "comunicado"} completo</a>
       </div>
     `
-  }
 
-  // Função para carregar o script de dados do blog
-  function loadBlogDataScript() {
-    if (document.querySelector('script[src="data/content.js"]')) {
-      return // Script já foi carregado
-    }
-
-    const script = document.createElement("script")
-    script.src = "data/content.js"
-    script.onload = () => {
-      // Inicializar o conteúdo do blog se estiver na aba do blog
-      const activeTab = document.querySelector(".tab-btn.active")
-      if (activeTab && activeTab.getAttribute("data-tab") === "blog") {
-        loadBlogContent()
-      }
-    }
-    document.body.appendChild(script)
+    return postElement
   }
 
   // Calendar generation
   function generateCalendar() {
-    console.log("Calendar generated")
-    // Implementação do calendário
-    const calendarContainer = document.getElementById("calendar-container")
-    if (!calendarContainer) return
+    const calendarDays = document.getElementById("calendar-days")
+    const currentMonthElement = document.getElementById("current-month")
 
+    if (!calendarDays || !currentMonthElement) return
+
+    // Set up date handling
     const currentDate = new Date()
-    const currentMonth = currentDate.getMonth()
-    const currentYear = currentDate.getFullYear()
+    let currentMonth = currentDate.getMonth()
+    let currentYear = currentDate.getFullYear()
 
-    // Criar o calendário
-    const calendar = document.createElement("div")
-    calendar.className = "calendar"
+    // Collection events data (fictional)
+    const collectionEvents = {
+      // Format: "YYYY-MM-DD": ["event-type1", "event-type2"]
+      "2023-07-03": ["paper"],
+      "2023-07-05": ["plastic"],
+      "2023-07-07": ["glass"],
+      "2023-07-10": ["metal"],
+      "2023-07-12": ["paper", "plastic"],
+      "2023-07-14": ["electronic"],
+      "2023-07-17": ["general"],
+      "2023-07-19": ["paper"],
+      "2023-07-21": ["plastic"],
+      "2023-07-24": ["glass", "metal"],
+      "2023-07-26": ["paper"],
+      "2023-07-28": ["electronic"],
+      "2023-07-31": ["general"],
 
-    // Cabeçalho do calendário
-    const header = document.createElement("div")
-    header.className = "calendar-header"
-
-    const monthNames = [
-      "Janeiro",
-      "Fevereiro",
-      "Março",
-      "Abril",
-      "Maio",
-      "Junho",
-      "Julho",
-      "Agosto",
-      "Setembro",
-      "Outubro",
-      "Novembro",
-      "Dezembro",
-    ]
-
-    header.innerHTML = `
-      <button id="prev-month" class="calendar-nav-btn"><i class="fas fa-chevron-left"></i></button>
-      <h3 id="month-display">${monthNames[currentMonth]} ${currentYear}</h3>
-      <button id="next-month" class="calendar-nav-btn"><i class="fas fa-chevron-right"></i></button>
-    `
-
-    calendar.appendChild(header)
-
-    // Dias da semana
-    const weekdays = document.createElement("div")
-    weekdays.className = "weekdays"
-
-    const days = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
-    days.forEach((day) => {
-      const dayElem = document.createElement("div")
-      dayElem.className = "weekday"
-      dayElem.textContent = day
-      weekdays.appendChild(dayElem)
-    })
-
-    calendar.appendChild(weekdays)
-
-    // Dias do mês
-    const daysContainer = document.createElement("div")
-    daysContainer.className = "days"
-    daysContainer.id = "calendar-days"
-
-    // Preencher os dias
-    updateCalendarDays(daysContainer, currentMonth, currentYear)
-
-    calendar.appendChild(daysContainer)
-
-    // Limpar e adicionar o calendário ao container
-    calendarContainer.innerHTML = ""
-    calendarContainer.appendChild(calendar)
-
-    // Adicionar event listeners para navegação
-    document.getElementById("prev-month").addEventListener("click", () => {
-      const monthDisplay = document.getElementById("month-display")
-      const [month, year] = monthDisplay.textContent.split(" ")
-      const monthIndex = monthNames.indexOf(month)
-
-      let newMonth = monthIndex - 1
-      let newYear = Number.parseInt(year)
-
-      if (newMonth < 0) {
-        newMonth = 11
-        newYear--
-      }
-
-      monthDisplay.textContent = `${monthNames[newMonth]} ${newYear}`
-      updateCalendarDays(daysContainer, newMonth, newYear)
-    })
-
-    document.getElementById("next-month").addEventListener("click", () => {
-      const monthDisplay = document.getElementById("month-display")
-      const [month, year] = monthDisplay.textContent.split(" ")
-      const monthIndex = monthNames.indexOf(month)
-
-      let newMonth = monthIndex + 1
-      let newYear = Number.parseInt(year)
-
-      if (newMonth > 11) {
-        newMonth = 0
-        newYear++
-      }
-
-      monthDisplay.textContent = `${monthNames[newMonth]} ${newYear}`
-      updateCalendarDays(daysContainer, newMonth, newYear)
-    })
-  }
-
-  function updateCalendarDays(container, month, year) {
-    container.innerHTML = ""
-
-    // Primeiro dia do mês
-    const firstDay = new Date(year, month, 1)
-    const startingDay = firstDay.getDay()
-
-    // Último dia do mês
-    const lastDay = new Date(year, month + 1, 0)
-    const totalDays = lastDay.getDate()
-
-    // Dias do mês anterior para preencher a primeira semana
-    const prevMonthLastDay = new Date(year, month, 0).getDate()
-
-    // Eventos do mês (exemplo)
-    const events = [
-      { day: 5, title: "Coleta Seletiva", type: "coleta" },
-      { day: 12, title: "Coleta Seletiva", type: "coleta" },
-      { day: 15, title: "Reunião Mensal", type: "reuniao" },
-      { day: 19, title: "Coleta Seletiva", type: "coleta" },
-      { day: 26, title: "Coleta Seletiva", type: "coleta" },
-    ]
-
-    // Preencher dias do mês anterior
-    for (let i = startingDay - 1; i >= 0; i--) {
-      const day = document.createElement("div")
-      day.className = "day prev-month-day"
-      day.textContent = prevMonthLastDay - i
-      container.appendChild(day)
+      "2023-08-02": ["paper"],
+      "2023-08-04": ["plastic"],
+      "2023-08-07": ["glass"],
+      "2023-08-09": ["metal"],
+      "2023-08-11": ["paper", "plastic"],
+      "2023-08-14": ["electronic"],
+      "2023-08-16": ["general"],
+      "2023-08-18": ["paper"],
+      "2023-08-21": ["plastic"],
+      "2023-08-23": ["glass", "metal"],
+      "2023-08-25": ["paper"],
+      "2023-08-28": ["electronic"],
+      "2023-08-30": ["general"],
     }
 
-    // Preencher dias do mês atual
-    const today = new Date()
-    const currentDay = today.getDate()
-    const currentMonth = today.getMonth()
-    const currentYear = today.getFullYear()
+    // Event type colors
+    const eventColors = {
+      paper: "green",
+      plastic: "red",
+      glass: "blue",
+      metal: "yellow",
+      electronic: "purple",
+      general: "gray",
+    }
 
-    for (let i = 1; i <= totalDays; i++) {
-      const day = document.createElement("div")
-      day.className = "day"
+    function renderCalendar() {
+      // Update month display
+      const monthNames = [
+        "Janeiro",
+        "Fevereiro",
+        "Março",
+        "Abril",
+        "Maio",
+        "Junho",
+        "Julho",
+        "Agosto",
+        "Setembro",
+        "Outubro",
+        "Novembro",
+        "Dezembro",
+      ]
+      currentMonthElement.textContent = `${monthNames[currentMonth]} ${currentYear}`
 
-      // Destacar o dia atual
-      if (i === currentDay && month === currentMonth && year === currentYear) {
-        day.classList.add("today")
+      // Clear previous calendar
+      calendarDays.innerHTML = ""
+
+      // Get first day of month and total days
+      const firstDay = new Date(currentYear, currentMonth, 1).getDay()
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate()
+
+      // Add empty cells for days before the first day of month
+      for (let i = 0; i < firstDay; i++) {
+        const emptyDay = document.createElement("div")
+        emptyDay.className = "calendar-day empty"
+        calendarDays.appendChild(emptyDay)
       }
 
-      day.textContent = i
+      // Add days of the month
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayElement = document.createElement("div")
+        dayElement.className = "calendar-day"
 
-      // Verificar se há eventos neste dia
-      const dayEvents = events.filter((event) => event.day === i)
-      if (dayEvents.length > 0) {
-        day.classList.add("has-event")
+        // Add day number
+        const dayNumber = document.createElement("div")
+        dayNumber.className = "day-number"
+        dayNumber.textContent = day
+        dayElement.appendChild(dayNumber)
 
-        // Adicionar indicadores de evento
-        const eventIndicators = document.createElement("div")
-        eventIndicators.className = "event-indicators"
+        // Check for events on this day
+        const dateString = `${currentYear}-${(currentMonth + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`
 
-        dayEvents.forEach((event) => {
-          const indicator = document.createElement("span")
-          indicator.className = `event-indicator ${event.type}`
-          indicator.title = event.title
-          eventIndicators.appendChild(indicator)
-        })
+        if (collectionEvents[dateString]) {
+          const eventContainer = document.createElement("div")
+          eventContainer.className = "event-dots"
 
-        day.appendChild(eventIndicators)
+          collectionEvents[dateString].forEach((eventType) => {
+            const eventDot = document.createElement("span")
+            eventDot.className = `event-dot ${eventColors[eventType]}`
+            eventDot.title = eventType.charAt(0).toUpperCase() + eventType.slice(1)
+            eventContainer.appendChild(eventDot)
+          })
 
-        // Adicionar tooltip com detalhes do evento
-        day.setAttribute("data-tooltip", dayEvents.map((e) => e.title).join(", "))
+          dayElement.appendChild(eventContainer)
+          dayElement.classList.add("has-events")
 
-        // Adicionar event listener para mostrar detalhes
-        day.addEventListener("click", () => {
-          showEventDetails(i, month, year, dayEvents)
-        })
+          // Add tooltip or popup functionality
+          dayElement.addEventListener("click", () => {
+            alert(`Coleta de ${collectionEvents[dateString].join(" e ")} em ${day}/${currentMonth + 1}/${currentYear}`)
+          })
+        }
+
+        calendarDays.appendChild(dayElement)
       }
-
-      container.appendChild(day)
     }
 
-    // Calcular quantos dias do próximo mês precisamos para completar a grade
-    const totalCells = Math.ceil((startingDay + totalDays) / 7) * 7
-    const nextMonthDays = totalCells - (startingDay + totalDays)
+    // Initialize calendar navigation
+    const prevMonthButton = document.getElementById("prev-month")
+    const nextMonthButton = document.getElementById("next-month")
 
-    // Preencher dias do próximo mês
-    for (let i = 1; i <= nextMonthDays; i++) {
-      const day = document.createElement("div")
-      day.className = "day next-month-day"
-      day.textContent = i
-      container.appendChild(day)
-    }
-  }
+    if (prevMonthButton && nextMonthButton) {
+      // Remove event listeners anteriores
+      prevMonthButton.replaceWith(prevMonthButton.cloneNode(true))
+      nextMonthButton.replaceWith(nextMonthButton.cloneNode(true))
 
-  function showEventDetails(day, month, year, events) {
-    const monthNames = [
-      "Janeiro",
-      "Fevereiro",
-      "Março",
-      "Abril",
-      "Maio",
-      "Junho",
-      "Julho",
-      "Agosto",
-      "Setembro",
-      "Outubro",
-      "Novembro",
-      "Dezembro",
-    ]
+      // Reobter referências após clonagem
+      const newPrevButton = document.getElementById("prev-month")
+      const newNextButton = document.getElementById("next-month")
 
-    const eventDetails = document.getElementById("event-details") || document.createElement("div")
-    eventDetails.id = "event-details"
-    eventDetails.className = "event-details"
+      newPrevButton.addEventListener("click", () => {
+        currentMonth--
+        if (currentMonth < 0) {
+          currentMonth = 11
+          currentYear--
+        }
+        renderCalendar()
+      })
 
-    eventDetails.innerHTML = `
-      <div class="event-details-header">
-        <h4>Eventos do dia ${day} de ${monthNames[month]} de ${year}</h4>
-        <button class="close-btn">&times;</button>
-      </div>
-      <div class="event-list">
-        ${events
-          .map(
-            (event) => `
-          <div class="event-item ${event.type}">
-            <div class="event-time">10:00</div>
-            <div class="event-info">
-              <div class="event-title">${event.title}</div>
-              <div class="event-description">Detalhes sobre ${event.title.toLowerCase()}</div>
-            </div>
-          </div>
-        `,
-          )
-          .join("")}
-      </div>
-    `
-
-    // Adicionar ao DOM se ainda não estiver
-    const calendarContainer = document.getElementById("calendar-container")
-    if (!document.getElementById("event-details")) {
-      calendarContainer.appendChild(eventDetails)
+      newNextButton.addEventListener("click", () => {
+        currentMonth++
+        if (currentMonth > 11) {
+          currentMonth = 0
+          currentYear++
+        }
+        renderCalendar()
+      })
     }
 
-    // Adicionar event listener para fechar
-    eventDetails.querySelector(".close-btn").addEventListener("click", () => {
-      eventDetails.remove()
-    })
+    // Initial render
+    renderCalendar()
   }
 
   // Quiz Game
   function initializeQuizGame() {
-    console.log("Quiz game initialized")
     const gameStartScreen = document.getElementById("game-start-screen")
     const gameQuestionScreen = document.getElementById("game-question-screen")
     const gameResultScreen = document.getElementById("game-result-screen")
@@ -569,23 +515,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const questionText = document.getElementById("question-text")
     const answersContainer = document.getElementById("answers-container")
     const timeBar = document.getElementById("time-bar")
-    const questionHeaderElement = document.querySelector(".question-header")
 
-    if (!gameStartScreen || !gameQuestionScreen || !gameResultScreen) {
-      console.log("Quiz elements not found")
+    if (
+      !gameStartScreen ||
+      !gameQuestionScreen ||
+      !gameResultScreen ||
+      !startButton ||
+      !restartButton ||
+      !scoreDisplay ||
+      !finalScoreDisplay ||
+      !answersContainer
+    )
       return
-    }
-
-    // Armazenar respostas erradas para mostrar no final
-    let wrongQuestions = []
-
-    // Remover a barra de tempo visível
-    if (questionHeaderElement && timeBar) {
-      const timeBarContainer = document.querySelector(".time-bar-container")
-      if (timeBarContainer) {
-        timeBarContainer.style.display = "none"
-      }
-    }
 
     // Quiz questions
     const questions = [
@@ -689,16 +630,19 @@ document.addEventListener("DOMContentLoaded", () => {
     let timer
     let gameStartTime
 
+    // Remove event listeners anteriores
+    const newStartButton = startButton.cloneNode(true)
+    const newRestartButton = restartButton.cloneNode(true)
+    const newShareButton = shareButton.cloneNode(true)
+
+    startButton.parentNode.replaceChild(newStartButton, startButton)
+    restartButton.parentNode.replaceChild(newRestartButton, restartButton)
+    shareButton.parentNode.replaceChild(newShareButton, shareButton)
+
     // Initialize game
-    if (startButton) {
-      startButton.addEventListener("click", startGame)
-    }
-    if (restartButton) {
-      restartButton.addEventListener("click", startGame)
-    }
-    if (shareButton) {
-      shareButton.addEventListener("click", shareResults)
-    }
+    newStartButton.addEventListener("click", startGame)
+    newRestartButton.addEventListener("click", startGame)
+    newShareButton.addEventListener("click", shareResults)
 
     function startGame() {
       // Reset game state
@@ -706,11 +650,10 @@ document.addEventListener("DOMContentLoaded", () => {
       score = 0
       correctAnswers = 0
       wrongAnswers = 0
-      wrongQuestions = []
       gameStartTime = Date.now()
 
       // Update displays
-      if (scoreDisplay) scoreDisplay.textContent = "0"
+      scoreDisplay.textContent = "0"
 
       // Show question screen
       gameStartScreen.classList.add("hidden")
@@ -718,7 +661,7 @@ document.addEventListener("DOMContentLoaded", () => {
       gameQuestionScreen.classList.remove("hidden")
 
       // Set total questions
-      if (totalQuestionsDisplay) totalQuestionsDisplay.textContent = questions.length
+      totalQuestionsDisplay.textContent = questions.length
 
       // Show first question
       showQuestion(questions[currentQuestionIndex])
@@ -726,37 +669,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function showQuestion(question) {
       // Update question number
-      if (currentQuestionDisplay) currentQuestionDisplay.textContent = currentQuestionIndex + 1
+      currentQuestionDisplay.textContent = currentQuestionIndex + 1
 
       // Set question text
-      if (questionText) questionText.textContent = question.question
+      questionText.textContent = question.question
 
       // Clear previous answers
-      if (answersContainer) answersContainer.innerHTML = ""
+      answersContainer.innerHTML = ""
 
       // Add answer options
-      if (answersContainer) {
-        question.answers.forEach((answer, index) => {
-          const answerButton = document.createElement("div")
-          answerButton.className = "answer-option"
-          answerButton.innerHTML = `
-            <div class="answer-content">
-              <div class="answer-marker">
-                <span>${String.fromCharCode(65 + index)}</span>
-              </div>
-              <span>${answer.text}</span>
+      question.answers.forEach((answer, index) => {
+        const answerButton = document.createElement("div")
+        answerButton.className = "answer-option"
+        answerButton.innerHTML = `
+          <div class="answer-content">
+            <div class="answer-marker">
+              <span>${String.fromCharCode(65 + index)}</span>
             </div>
-          `
+            <span>${answer.text}</span>
+          </div>
+        `
 
-          answerButton.addEventListener("click", () => {
-            selectAnswer(answer, answerButton, index)
-          })
-
-          answersContainer.appendChild(answerButton)
+        answerButton.addEventListener("click", () => {
+          selectAnswer(answer, answerButton)
         })
-      }
 
-      // Start timer (invisível para o usuário, mas ainda rastreando o tempo)
+        answersContainer.appendChild(answerButton)
+      })
+
+      // Start timer
       startTimer()
     }
 
@@ -764,8 +705,6 @@ document.addEventListener("DOMContentLoaded", () => {
       // Reset timer
       clearInterval(timer)
       timeLeft = 100
-
-      // Manter a barra de tempo oculta, mas ainda rastrear o tempo
       if (timeBar) {
         timeBar.style.width = "100%"
       }
@@ -773,29 +712,20 @@ document.addEventListener("DOMContentLoaded", () => {
       // Start countdown
       timer = setInterval(() => {
         timeLeft -= 1
-
-        // Atualizar a barra de tempo (invisível)
         if (timeBar) {
           timeBar.style.width = `${timeLeft}%`
         }
 
         if (timeLeft <= 0) {
           clearInterval(timer)
+          // Auto-select wrong answer if time runs out
           wrongAnswers++
-          wrongQuestions.push({
-            questionIndex: currentQuestionIndex,
-            question: questions[currentQuestionIndex].question,
-            correctAnswerIndex: questions[currentQuestionIndex].answers.findIndex((a) => a.correct),
-            userAnswerIndex: -1,
-            timeOut: true,
-          })
-
           nextQuestion()
         }
       }, 100) // 10 seconds total (100 * 100ms)
     }
 
-    function selectAnswer(answer, selectedButton, answerIndex) {
+    function selectAnswer(answer, selectedButton) {
       // Stop timer
       clearInterval(timer)
 
@@ -813,28 +743,22 @@ document.addEventListener("DOMContentLoaded", () => {
         selectedButton.classList.add("correct")
         // Add points
         score += 10 + Math.floor(timeLeft / 10) // More points for faster answers
-        if (scoreDisplay) scoreDisplay.textContent = score
+        scoreDisplay.textContent = score
         correctAnswers++
       } else {
         selectedButton.classList.add("incorrect")
         wrongAnswers++
 
-        const correctAnswerIndex = questions[currentQuestionIndex].answers.findIndex((a) => a.correct)
-        wrongQuestions.push({
-          questionIndex: currentQuestionIndex,
-          question: questions[currentQuestionIndex].question,
-          correctAnswerIndex: correctAnswerIndex,
-          userAnswerIndex: answerIndex,
-          correctAnswer: questions[currentQuestionIndex].answers[correctAnswerIndex].text,
-          userAnswer: answer.text,
-          timeOut: false,
-        })
-        allAnswers.forEach((button, idx) => {
-          if (questions[currentQuestionIndex].answers[idx].correct) {
+        // Show correct answer
+        allAnswers.forEach((button) => {
+          const buttonIndex = Array.from(allAnswers).indexOf(button)
+          if (questions[currentQuestionIndex].answers[buttonIndex].correct) {
             button.classList.add("correct")
           }
         })
       }
+
+      // Go to next question after delay
       setTimeout(() => {
         nextQuestion()
       }, 1500)
@@ -855,10 +779,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const timeTaken = Math.floor((Date.now() - gameStartTime) / 1000)
 
       // Update result screen
-      if (finalScoreDisplay) finalScoreDisplay.textContent = score
-      if (correctAnswersDisplay) correctAnswersDisplay.textContent = correctAnswers
-      if (wrongAnswersDisplay) wrongAnswersDisplay.textContent = wrongAnswers
-      if (timeTakenDisplay) timeTakenDisplay.textContent = `${timeTaken}s`
+      finalScoreDisplay.textContent = score
+      correctAnswersDisplay.textContent = correctAnswers
+      wrongAnswersDisplay.textContent = wrongAnswers
+      timeTakenDisplay.textContent = `${timeTaken}s`
 
       // Show appropriate icon based on score
       const resultIcon = document.getElementById("result-icon")
@@ -872,175 +796,44 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // Mostrar respostas erradas
-      const wrongAnswersSection = document.createElement("div")
-      wrongAnswersSection.className = "wrong-answers-section"
-
-      if (wrongQuestions.length > 0) {
-        wrongAnswersSection.innerHTML = `
-          <h4>Respostas Incorretas:</h4>
-          <div class="wrong-answers-list">
-            ${wrongQuestions
-              .map(
-                (item) => `
-              <div class="wrong-answer-item">
-                <p><strong>Pergunta ${item.questionIndex + 1}:</strong> ${item.question}</p>
-                ${
-                  item.timeOut
-                    ? `<p class="text-red">Tempo esgotado</p>`
-                    : `<p>Sua resposta: <span class="text-red">${item.userAnswer}</span></p>`
-                }
-                <p>Resposta correta: <span class="text-green">${item.correctAnswer}</span></p>
-              </div>
-            `,
-              )
-              .join("")}
-          </div>
-        `
-      } else {
-        wrongAnswersSection.innerHTML = `
-          <h4>Parabéns!</h4>
-          <p>Você acertou todas as perguntas!</p>
-        `
-      }
-
-      // Adicionar a seção de respostas erradas ao resultado
-      const resultActions = document.querySelector(".result-actions")
-      if (resultActions) {
-        const existingSection = document.querySelector(".wrong-answers-section")
-        if (existingSection) {
-          existingSection.remove()
-        }
-        resultActions.parentNode.insertBefore(wrongAnswersSection, resultActions)
-      }
+      // Show result screen
       gameQuestionScreen.classList.add("hidden")
       gameResultScreen.classList.remove("hidden")
     }
+
     function shareResults() {
+      // In a real app, this would share to social media
       alert(
         `Compartilhei minha pontuação no Desafio de Reciclagem: ${score} pontos! Venha testar seus conhecimentos sobre reciclagem em ascamarea.org`,
       )
     }
   }
 
-  // Função para inicializar o mapa
-  function initializeMap() {
-    console.log("Map initialized")
-    const mapContainer = document.getElementById("map-container")
-    if (!mapContainer) return
-    if (mapContainer.querySelector(".map-content")) return
-    const mapContent = document.createElement("div")
-    mapContent.className = "map-content"
-    mapContent.innerHTML = `
-      <div class="map-header">
-        <h3>Pontos de Coleta</h3>
-        <div class="map-filters">
-          <button class="map-filter-btn active" data-filter="all">Todos</button>
-          <button class="map-filter-btn" data-filter="paper">Papel</button>
-          <button class="map-filter-btn" data-filter="plastic">Plástico</button>
-          <button class="map-filter-btn" data-filter="glass">Vidro</button>
-          <button class="map-filter-btn" data-filter="metal">Metal</button>
-          <button class="map-filter-btn" data-filter="electronic">Eletrônicos</button>
-        </div>
-      </div>
-      <div class="map-view">
-        <div class="map-placeholder">
-          <i class="fas fa-map-marked-alt"></i>
-          <p>Mapa de pontos de coleta será exibido aqui.</p>
-          <p class="map-note">Nota: Em uma implementação real, este seria um mapa interativo usando Google Maps ou Leaflet.</p>
-        </div>
-        <div class="map-legend">
-          <h4>Legenda</h4>
-          <ul>
-            <li><span class="legend-marker paper"></span> Papel</li>
-            <li><span class="legend-marker plastic"></span> Plástico</li>
-            <li><span class="legend-marker glass"></span> Vidro</li>
-            <li><span class="legend-marker metal"></span> Metal</li>
-            <li><span class="legend-marker electronic"></span> Eletrônicos</li>
-          </ul>
-        </div>
-      </div>
-      <div class="collection-points">
-        <h4>Pontos de Coleta Próximos</h4>
-        <div class="collection-points-list">
-          <div class="collection-point-item" data-types="paper,plastic,glass">
-            <div class="collection-point-icon">
-              <i class="fas fa-recycle"></i>
-            </div>
-            <div class="collection-point-info">
-              <h5>Ecoponto Central</h5>
-              <p>Av. Principal, 1000 - Centro</p>
-              <div class="collection-point-types">
-                <span class="point-type paper">Papel</span>
-                <span class="point-type plastic">Plástico</span>
-                <span class="point-type glass">Vidro</span>
-              </div>
-              <p class="collection-point-hours"><i class="fas fa-clock"></i> Seg-Sex: 8h às 17h</p>
-            </div>
-          </div>
-          <div class="collection-point-item" data-types="metal,electronic">
-            <div class="collection-point-icon">
-              <i class="fas fa-laptop"></i>
-            </div>
-            <div class="collection-point-info">
-              <h5>Ponto de Coleta Eletrônica</h5>
-              <p>Rua Tecnologia, 500 - Bairro Novo</p>
-              <div class="collection-point-types">
-                <span class="point-type metal">Metal</span>
-                <span class="point-type electronic">Eletrônicos</span>
-              </div>
-              <p class="collection-point-hours"><i class="fas fa-clock"></i> Ter-Sáb: 9h às 18h</p>
-            </div>
-          </div>
-          <div class="collection-point-item" data-types="paper,plastic">
-            <div class="collection-point-icon">
-              <i class="fas fa-shopping-bag"></i>
-            </div>
-            <div class="collection-point-info">
-              <h5>Supermercado Verde</h5>
-              <p>Av. Sustentável, 230 - Jardim Ecológico</p>
-              <div class="collection-point-types">
-                <span class="point-type paper">Papel</span>
-                <span class="point-type plastic">Plástico</span>
-              </div>
-              <p class="collection-point-hours"><i class="fas fa-clock"></i> Todos os dias: 8h às 22h</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    `
-
-    mapContainer.appendChild(mapContent)
-
-    // Adicionar event listeners para os filtros
-    const filterButtons = mapContainer.querySelectorAll(".map-filter-btn")
-    filterButtons.forEach((btn) => {
-      btn.addEventListener("click", function () {
-        // Atualizar botão ativo
-        filterButtons.forEach((b) => b.classList.remove("active"))
-        this.classList.add("active")
-
-        // Filtrar pontos de coleta
-        const filter = this.getAttribute("data-filter")
-        filterCollectionPoints(filter)
-      })
-    })
-
-    function filterCollectionPoints(filter) {
-      const points = mapContainer.querySelectorAll(".collection-point-item")
-
-      points.forEach((point) => {
-        const types = point.getAttribute("data-types").split(",")
-
-        if (filter === "all" || types.includes(filter)) {
-          point.style.display = ""
-        } else {
-          point.style.display = "none"
-        }
-      })
+  // Initialize the appropriate tab content based on the active tab
+  try {
+    const activeTab = document.querySelector(".tab-btn.active")
+    if (activeTab) {
+      const activeTabName = activeTab.getAttribute("data-tab")
+      if (activeTabName === "gamificacao") {
+        initializeQuizGame()
+      } else if (activeTabName === "calendario") {
+        generateCalendar()
+      } else if (activeTabName === "blog") {
+        loadBlogContent()
+      } else if (activeTabName === "galeria") {
+        loadGalleryContent()
+      }
     }
+  } catch (error) {
+    console.error("Erro ao inicializar aba ativa:", error)
   }
 
-  // Carregar dados do blog
-  loadBlogDataScript()
+  console.log("Scripts inicializados com sucesso!")
 })
+
+// Prevenir múltiplas execuções do script
+if (typeof window.scriptLoaded === "undefined") {
+  window.scriptLoaded = true
+} else {
+  console.warn("Script já foi carregado anteriormente")
+}
