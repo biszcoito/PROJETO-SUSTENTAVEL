@@ -325,6 +325,7 @@ ol {
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
+  margin: 6px;
 }
 
 .mobile-menu-button {
