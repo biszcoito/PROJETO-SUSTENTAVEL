@@ -509,12 +509,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const finalScoreDisplay = document.getElementById("final-score")
     const correctAnswersDisplay = document.getElementById("correct-answers")
     const wrongAnswersDisplay = document.getElementById("wrong-answers")
-    const timeTakenDisplay = document.getElementById("time-taken")
+  //const timeTakenDisplay = document.getElementById("time-taken")
     const currentQuestionDisplay = document.getElementById("current-question")
     const totalQuestionsDisplay = document.getElementById("total-questions")
     const questionText = document.getElementById("question-text")
     const answersContainer = document.getElementById("answers-container")
-    const timeBar = document.getElementById("time-bar")
+   //const timeBar = document.getElementById("time-bar")
 
     if (
       !gameStartScreen ||

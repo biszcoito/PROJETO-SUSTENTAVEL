@@ -5,7 +5,6 @@
 }
 
 :root {
-  /* Colors */
   --color-green-50: #f0fdf4;
   --color-green-100: #dcfce7;
   --color-green-200: #bbf7d0;
@@ -158,13 +157,7 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Typography */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1,h2,h3,h4,h5,h6 {
   font-weight: 700;
   line-height: 1.2;
   margin-bottom: var(--spacing-4);
@@ -1880,9 +1873,9 @@ input:checked + .slider:before {
     .card-img {
       display: flex;
       flex-direction: column;
-      max-width: 280px;
+      width: 200px;
       border-radius: var(--card-radius);
-      background-color: var(--card-bg);
+      background-color: var(--color-green-700);
       box-shadow: 0 8px 20px var(--card-shadow);
       overflow: hidden;
       transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
@@ -1899,7 +1892,7 @@ input:checked + .slider:before {
       outline: none;
     }
     .image-area {
-      background: rgb(255, 255, 255);
+      background: rgb(77, 32, 32);
       height: 100%;
       width: 100%;
       aspect-ratio: 1/1;
@@ -1926,6 +1919,10 @@ input:checked + .slider:before {
       display: block;
       margin-left: auto;
       margin-right: auto;
+    }
+    .dark .text-img{
+      background-color: var(--text-bg-dark);
+      color: var(--text-color-dark);
     }
 @media (min-width: 768px) {
   .blog-posts-grid {
