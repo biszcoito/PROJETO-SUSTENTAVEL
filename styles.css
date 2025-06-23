@@ -280,6 +280,7 @@ ol {
   left: 0;
   right: 0;
   z-index: 50;
+  max-height: 6.5rem;
 }
 
 .dark .site-header {
