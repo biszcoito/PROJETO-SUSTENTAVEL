@@ -273,7 +273,7 @@ ol {
 .site-header {
   background-color: var(--color-green-600);
   color: var(--color-white);
-  padding: 1.93rem;
+  padding: 0.93rem;
   box-shadow: var(--shadow-md);
   position: fixed;
   top: 0;
