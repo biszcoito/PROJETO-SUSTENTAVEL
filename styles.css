@@ -298,7 +298,7 @@ ol {
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
-  margin-left: -17%;
+  margin-left: -10%;
 }
 
 .logo i {
